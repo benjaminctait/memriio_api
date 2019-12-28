@@ -272,7 +272,7 @@ app.post('/searchuser',(req,res) =>{
     .from('memories')
     .join('memfiles', {'memfiles.memid':'memories.id'})
     .where({userid:userid})
-    .orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})
+    .orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})
     .then(memories=>{
         if(memories.length){
             res.json(memories)
@@ -281,7 +281,6 @@ app.post('/searchuser',(req,res) =>{
         }
     }).catch(err=> res.json(err))
 })
-
 
 // Listen ----------------------------------------------------------------
 
