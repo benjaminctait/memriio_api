@@ -267,32 +267,19 @@ app.post('/search',(req,res) =>{
 app.post('/searchuser',(req,res) =>{
 
     const {userid} = req.body
-    console.log('search user',userid);
     
-    
-    // id,groupid,userid,herourl
-    db.select('memories.id','memories.groupid','memories.userid','memfiles.fileurl')
+    db.select('memories.id','memories.groupid','memories.userid','memories.title','memfiles.fileurl')
     .from('memories')
-    .join('memfiles', {'memfiles.memid':'memories.id'}).where({userid:userid})
-    
-    
-
-    // db.select('memories.id','memories.groupid','memories.userid','memfiles.fileurl')
-    // .join('memfiles', {'memfiles.memid': 'memories.id'}).where({'memories.userid':userid}).orWhereIn('groupid',function(){
-    //     this.select('groupid').from('memberships').where({userid:userid})
-    
-
-    // db.select('*').from('memories').where({userid:userid}).orWhereIn('groupid',function(){
-    //         this.select('groupid').from('memberships').where({userid:userid})
-    //})
-        .then(memories=>{
-            if(memories.length){
-                res.json(memories)
-            }else{
-                res.status(400).json('no matching memories found')
-            }
-        })
-    .catch(err=> res.json(err))
+    .join('memfiles', {'memfiles.memid':'memories.id'})
+    .where({userid:userid})
+    .orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})
+    .then(memories=>{
+        if(memories.length){
+            res.json(memories)
+        }else{
+            res.status(400).json('no matching memories found')
+        }
+    }).catch(err=> res.json(err))
 })
 
 
