@@ -128,6 +128,7 @@ app.post ('/signedurl',(req,res) =>{
                 signedURL: returnData.signedRequest,
                 url:returnData.url
              }) 
+             console.log('res : ', res)
         }
     });
 
