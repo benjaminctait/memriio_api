@@ -124,6 +124,7 @@ app.post ('/signedurl',(req,res) =>{
             
             // Send it all back
             res.json( {
+                success:true,
                 signedURL: returnData.signedRequest,
                 url:returnData.url
              }) 
@@ -132,7 +133,7 @@ app.post ('/signedurl',(req,res) =>{
 
 })
 
-// post ----------------------------------------------------------------
+// create memory --------------------------------------------------
 
 app.post('/creatememory',(req,res) => {
     const {ispersonal,userid,groupid} = req.body
@@ -161,13 +162,12 @@ app.post('/creatememory',(req,res) => {
         .catch(err=> json(err))
 })
 
-// test add to mem ---------
+// Add file to memory ---------
 
 app.post('/addmemfile',(req,res) => {
     const{memid,fileurl,ishero} = req.body;
     console.log('addtest 3 :',memid,fileurl,ishero);
     
-
 
     db('memfiles').returning('id')
         .insert({
@@ -180,16 +180,16 @@ app.post('/addmemfile',(req,res) => {
         }).catch(err => res.status(400).json(err))
     })  
 
-// associate ----------------------------------------------------------------
+// Associate key words with a memory ----------------------------------------------------------------
 
 app.post('/associate',(req,res) => {
     const {memid,keyword} = req.body
     
-    db('memassociates')
+    db('memwords')
         .returning('*')
         .insert({
             memid:memid,
-            keywords:keyword
+            keyword:keyword
     })
         .then(associate=> {
             res.json(associate[0]);
