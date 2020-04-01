@@ -93,13 +93,11 @@ app.post ('/signedurl',(req,res) =>{
 
     console.log('made it to getSignedURL', req.body);
 
-    
-
     const s3 = new aws.S3(); // Create a new instance of S3
     const fileName = req.body.fileName;
     const fileType = req.body.fileType;
 
-    console.log('filename :',fileName)
+    
 
     const s3Params = {
         Bucket: S3_BUCKET,
@@ -119,9 +117,7 @@ app.post ('/signedurl',(req,res) =>{
                 signedRequest: signedURL,
                 url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
             };
-            console.log('signedURL : ',returnData.signedRequest);
-            console.log('url       : ',returnData.url);
-            
+                        
             // Send it all back
             res.json( {
                 success:true,
@@ -167,9 +163,8 @@ app.post('/creatememory',(req,res) => {
 
 // Add file to memory ---------
 
-app.post('/addmemfile',(req,res) => {
+app.post('/associateFile',(req,res) => {
     const{memid,fileurl,ishero} = req.body;
-    console.log('addtest 3 :',memid,fileurl,ishero);
     
 
     db('memfiles').returning('id')
@@ -178,24 +173,59 @@ app.post('/addmemfile',(req,res) => {
             fileurl:fileurl,
             ishero:ishero
         })
-        .then(data =>{
-            res.status(200).json(data)
+        .then(result =>{
+            res.json(result[0]);  // returns the memory id if successfull
+            
         }).catch(err => res.status(400).json(err))
     })  
 
 // Associate key words with a memory ----------------------------------------------------------------
 
-app.post('/associate',(req,res) => {
+app.post('/associateKeyword',(req,res) => {
     const {memid,keyword} = req.body
     
     db('memwords')
-        .returning('*')
+        .returning('memid')
         .insert({
             memid:memid,
             keyword:keyword
     })
-        .then(associate=> {
-            res.json(associate[0]);
+        .then(result=> {
+            res.json(result[0]);  // returns the memory id if successfull
+        })
+        .catch(err=> res.status(400).json('unable to associate'))
+})
+
+// Associate a userID with a memory ----------------------------------------------------------------
+
+app.post('/associatePerson',(req,res) => {
+    const {memid,userid} = req.body
+    
+    db('mempeople')
+        .returning('memid')
+        .insert({
+            memid:memid,
+            userid:userid
+    })
+        .then(result=> {
+            res.json(result[0]); // returns the memory id if successfull
+        })
+        .catch(err=> res.status(400).json('unable to associate'))
+})
+
+// Associate a groupID with a memory ----------------------------------------------------------------
+
+app.post('/associateGroup',(req,res) => {
+    const {memid,groupid} = req.body
+    
+    db('memgroups')
+        .returning('memid')
+        .insert({
+            memid:memid,
+            groupid:groupid
+    })
+        .then(result=> {
+            res.json(result[0]); // returns the memory id if successfull
         })
         .catch(err=> res.status(400).json('unable to associate'))
 })
