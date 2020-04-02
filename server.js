@@ -124,9 +124,7 @@ app.post ('/signedurl',(req,res) =>{
                 signedURL: returnData.signedRequest,
                 url:returnData.url
              }) 
-             console.log('res : ', res.success)
-             console.log('res.signedurl : ', res.signedURL)
-             console.log('res.url : ', res.url)
+             
         }
     });
 
@@ -175,7 +173,7 @@ app.post('/associateFile',(req,res) => {
         })
         .then(result =>{
             res.json(result[0]);  // returns the memory id if successfull
-            
+
         }).catch(err => res.status(400).json(err))
     })  
 
