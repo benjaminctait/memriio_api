@@ -29,7 +29,7 @@ app.use(cors());
 // root ----------------------
 
 app.get('/',(req,res) =>{
-    res.json('memriio is live : getsignedfileURL 4')
+    res.json('memriio server is live : version 5')
 })
 
 // signin ----------------------
