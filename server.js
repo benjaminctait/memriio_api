@@ -133,15 +133,17 @@ app.post ('/signedurl',(req,res) =>{
 // create memory --------------------------------------------------
 
 app.post('/creatememory',(req,res) => {
-    const {ispersonal,userid,groupid} = req.body
+    const {userid,title,story,location} = req.body
     
     db('memories')
         .returning('id')
         .insert({
             createdon:new Date(),
-            ispersonal:ispersonal,
             userid:userid,
-            groupid:groupid
+            title:title,
+            story:story,
+            location:location
+          
     })
         .then(memoryids=> {
             if(memoryids.length > 0){
