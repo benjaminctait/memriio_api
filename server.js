@@ -304,7 +304,7 @@ app.post('/get_memories_userid',(req,res) =>{
     db.select('memories.id','memories.userid','memories.title','memories.story','memories.location','memories.createdon')
     .from('memories')
     .where({userid:userid})
-    .orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})
+    //.orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})
     .then(memories=>{
         if(memories.length){
             res.json(memories)
