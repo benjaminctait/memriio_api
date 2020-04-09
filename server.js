@@ -301,9 +301,8 @@ app.post('/get_memories_userid',(req,res) =>{
 
     const {userid} = req.body
     
-    db.select('memories.id','memories.userid','memories.title','memories.story','memories.location','memories.createdon','memfiles.fileurl')
+    db.select('memories.id','memories.userid','memories.title','memories.story','memories.location','memories.createdon')
     .from('memories')
-    .join('memfiles', {'memfiles.memid':'memories.id'})
     .where({userid:userid})
     .orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})
     .then(memories=>{
