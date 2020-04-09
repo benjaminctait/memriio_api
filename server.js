@@ -301,7 +301,7 @@ app.post('/get_memories_userid',(req,res) =>{
 
     const {userid} = req.body
     
-    db.select('memories.id','memories.userid','memories.title','memfiles.story','memories.location','memories.createdon','memfiles.fileurl')
+    db.select('memories.id','memories.userid','memories.title','memories.story','memories.location','memories.createdon','memfiles.fileurl')
     .from('memories')
     .join('memfiles', {'memfiles.memid':'memories.id'})
     .where({userid:userid})
