@@ -305,7 +305,8 @@ app.post('/get_memories_userid',(req,res) =>{
     db.select('m.id', 'm.userid','m.title','m.createdon','mf.fileurl')
     .from('memories m').join('memfiles mf', function() {
         this.on('mf.memid', '=', 'm.id').on('mf.ishero','=true')
-      }).where({userid:userid})
+      })
+      //.where({userid:userid})
     
     //.orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})
     .then(memories=>{
