@@ -302,9 +302,9 @@ app.post('/get_memories_userid',(req,res) =>{
     const {userid} = req.body
     //SELECT m.id, m.userid,m.title,m.createdon,F.fileurl FROM memories m JOIN (SELECT mf.memid,mf.fileurl FROM memfiles mf WHERE mf.ishero=true) AS F ON F.memid=m.id;
     
-    db.select('m.id', 'm.userid','m.title','m.createdon','mf.fileurl')
-    .from('memories m').join('memfiles mf', function() {
-        this.on('mf.memid', '=', 'm.id').on('mf.ishero','=true')
+    db.select('memories.id', 'memories.userid','memories.title','memories.createdon','memfiles.fileurl')
+    .from('memories').join('memfiles', function() {
+        this.on('memfiles.memid', '=', 'memfiles.id').on('memfiles.ishero','=true')
       })
       //.where({userid:userid})
     
