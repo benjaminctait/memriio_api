@@ -300,14 +300,15 @@ app.post('/search',(req,res) =>{
 app.post('/get_memories_userid',(req,res) =>{
 
     const {userid} = req.body
-    //SELECT m.id, m.userid,m.title,m.createdon,F.fileurl FROM memories m JOIN (SELECT mf.memid,mf.fileurl FROM memfiles mf WHERE mf.ishero=true) AS F ON F.memid=m.id;
     
     db.select('memories.id', 'memories.userid','memories.title','memories.createdon','memfiles.fileurl')
     .from('memories').join('memfiles', function() {
         this.on('memfiles.memid', '=', 'memories.id').onIn('memfiles.ishero',[true])
       })
     .where({userid:userid})
-    .orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})
+    .orWhereIn('memories.id',function(){this.select('memid').from('memgroups')
+        .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
+
     .then(memories=>{
         if(memories.length){
             res.json(memories)
