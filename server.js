@@ -301,13 +301,13 @@ app.post('/get_memories_userid',(req,res) =>{
 
     const {userid} = req.body
     
-    db.select('memories.id', 'memories.userid','memories.title','memories.createdon','memfiles.fileurl')
+    db.select('memories.id', 'memories.userid','memories.title','memories.story','memories.createdon','memfiles.fileurl')
     .from('memories').join('memfiles', function() {
         this.on('memfiles.memid', '=', 'memories.id').onIn('memfiles.ishero',[true])
       })
     .where({userid:userid})
-    .orWhereIn('memories.id',function(){this.select('memid').from('memgroups')
-        .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
+        .orWhereIn('memories.id',function(){this.select('memid').from('memgroups')
+             .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
 
     .then(memories=>{
         if(memories.length){
