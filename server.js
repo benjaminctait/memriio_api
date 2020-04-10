@@ -307,8 +307,7 @@ app.post('/get_memories_userid',(req,res) =>{
         this.on('memfiles.memid', '=', 'memories.id').onIn('memfiles.ishero',[true])
       })
     .where({userid:userid})
-    
-    //.orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})
+    .orWhereIn('groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})
     .then(memories=>{
         if(memories.length){
             res.json(memories)
