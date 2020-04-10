@@ -308,6 +308,7 @@ app.post('/get_memories_userid',(req,res) =>{
     .where({userid:userid})
         .orWhereIn('memories.id',function(){this.select('memid').from('memgroups')
              .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
+    .orderBy('memories.craetedon','desc')
 
     .then(memories=>{
         if(memories.length){
