@@ -331,11 +331,10 @@ app.post('/process_memory_images',(req,res) =>{
     db.select('memfiles.fileurl','memfiles.ishero')
     .from('memfiles')
     .where({memid:memoryid})
-    .then(response => response.json(response)
-    .then(record => {
+    .then(response => {
         console.log('memory : ' + memoryid);
-        console.log('highres image : ' , + record.fileurl + ' hero = ' + record.ishero);
-    }))
+        console.log('highres image : ' , + response )
+    })
     
 })
 
