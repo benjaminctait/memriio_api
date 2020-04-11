@@ -332,13 +332,13 @@ app.post('/process_memory_images',(req,res) =>{
     db.select('*').from('memfiles')
     //db.select('fileurl','ishero').from('memfiles').where({memid:41})
     .then(response => response.json()
-    .then(respons => {
+    .then(response => {
         console.log('memory : ' + memoryid );
         console.log('highres image : ' + response )
-        console.log('sql : ' + db.toString());
+        
     }))
     .catch(err =>{
-        console.log('error : ' + db.toString());
+        console.log(err);
     })
     
 })
