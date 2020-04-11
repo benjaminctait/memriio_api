@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt-nodejs')
 const cors = require('cors')
 const knex = require('knex')
 const aws = require('aws-sdk')
+const Jimp = require('jimp')
 require('dotenv').config(); // Configure dotenv to load in the .env file
 const S3_BUCKET = process.env.S3_BUCKET
 const db = knex({
@@ -317,6 +318,22 @@ app.post('/get_memories_userid',(req,res) =>{
             res.status(400).json('no matching memories found')
         }
     }).catch(err=> res.json(err))
+})
+
+// process memory images ----------------------------------------------------------------
+
+app.post('/process_memory_images',(req,res) =>{
+
+    const {memoryid} = req.body
+    db.select('memfiles.fileurl','memfiles.ishero')
+    .from('memfiles')
+    .where({memid:memoryid})
+    .then(record => record.json())
+    .then(record => {
+        console.log('memory : ' + memoryid);
+        console.log('highres image : ' , + record.fileurl + ' hero = ' + record.ishero);
+    })
+    
 })
 
 // Listen ----------------------------------------------------------------
