@@ -334,8 +334,10 @@ app.post('/process_memory_images',(req,res) =>{
     .then(response => {
         console.log('memory : ' + memoryid );
         //console.log('highres image : ' + response )
-        console.log('sql : ' + db.toString());
+       
         
+    }).catch(err =>{
+        console.log('sql : ' + db.toString());
     })
     
 })
