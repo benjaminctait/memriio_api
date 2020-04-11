@@ -333,7 +333,9 @@ app.post('/process_memory_images',(req,res) =>{
     .where({memid:memoryid})
     .then(response => {
         console.log('memory : ' + memoryid );
-        console.log('highres image : ' + response )
+        //console.log('highres image : ' + response )
+        console.log('sql : ' + db.toString());
+        
     })
     
 })
