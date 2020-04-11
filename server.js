@@ -332,8 +332,8 @@ app.post('/process_memory_images',(req,res) =>{
     .from('memfiles')
     .where({memid:memoryid})
     .then(response => {
-        console.log('memory : ' + memoryid);
-        console.log('highres image : ' , + response )
+        console.log('memory : ' + memoryid );
+        console.log('highres image : ' , + response.json() )
     })
     
 })
