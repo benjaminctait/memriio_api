@@ -329,14 +329,12 @@ app.post('/process_memory_images',(req,res) =>{
     
 
     console.log('process_memory_images with memoryid : ' + memoryid);
-    db.select('*').from('memfiles')
+    db.select('fileurl').from('memfiles')
     //db.select('fileurl','ishero').from('memfiles').where({memid:41})
-    .then(response => response.json()
-    .then(response => {
+    .then(response =>{
         console.log('memory : ' + memoryid );
-        console.log('highres image : ' + response )
-        
-    }))
+        console.log('highres image : ' + response)
+    })
     .catch(err =>{
         console.log(err);
     })
