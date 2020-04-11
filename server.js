@@ -333,7 +333,11 @@ app.post('/process_memory_images',(req,res) =>{
     //db.select('fileurl','ishero').from('memfiles').where({memid:41})
     .then(response =>{
         console.log('memory : ' + memoryid );
-        console.log('highres image : ' + JSON.stringify(response))
+        response.map(imagepath =>{ 
+            console.log(imagepath);
+            
+         })
+        //console.log('highres image : ' + JSON.stringify(response))
     })
     .catch(err =>{
         console.log(err);
