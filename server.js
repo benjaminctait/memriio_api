@@ -329,7 +329,7 @@ app.post('/process_memory_images',(req,res) =>{
     
 
     console.log('process_memory_images with memoryid : ' + memoryid);
-    db.select('fileurl').from('memfiles')
+    db.select('fileurl').from('memfiles').where({memid:memoryid})
     //db.select('fileurl','ishero').from('memfiles').where({memid:41})
     .then(response =>{
         console.log('memory : ' + memoryid );
