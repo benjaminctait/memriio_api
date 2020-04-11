@@ -325,6 +325,9 @@ app.post('/get_memories_userid',(req,res) =>{
 app.post('/process_memory_images',(req,res) =>{
 
     const {memoryid} = req.body
+
+    console.log('api process_memroy_images with memoryid : ' + memoryid);
+    
     db.select('memfiles.fileurl','memfiles.ishero')
     .from('memfiles')
     .where({memid:memoryid})
