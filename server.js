@@ -326,13 +326,12 @@ app.post('/process_memory_images',(req,res) =>{
 
     const {memoryid} = req.body
 
-    console.log('api process_memroy_images with memoryid : ' + memoryid);
+    console.log('process_memroy_images with memoryid : ' + memoryid);
     
     db.select('memfiles.fileurl','memfiles.ishero')
     .from('memfiles')
     .where({memid:memoryid})
-    .then(record => record.json())
-    .then(record => {
+    .then(record =>  {
         console.log('memory : ' + memoryid);
         console.log('highres image : ' , + record.fileurl + ' hero = ' + record.ishero);
     })
