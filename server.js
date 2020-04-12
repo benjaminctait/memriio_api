@@ -90,6 +90,7 @@ app.post('/register',(req,res) => {
 
 // get signed URL FROM AWS ----------------------------------------------------------------
 
+
 app.post ('/signedurl',(req,res) =>{
 
     console.log('made it to getSignedURL', req.body);
@@ -320,30 +321,6 @@ app.post('/get_memories_userid',(req,res) =>{
     }).catch(err=> res.json(err))
 })
 
-// process memory images ----------------------------------------------------------------
-
-app.post('/process_memory_images',(req,res) =>{
-
-    const {memoryid} = req.body
-
-    
-
-    console.log('process_memory_images with memoryid : ' + memoryid);
-    db.select('fileurl').from('memfiles').where({memid:memoryid})
-    //db.select('fileurl','ishero').from('memfiles').where({memid:41})
-    .then(response =>{
-        console.log('memory : ' + memoryid );
-        response.map(imagepath =>{ 
-            console.log(imagepath);
-            
-         })
-        //console.log('highres image : ' + JSON.stringify(response))
-    })
-    .catch(err =>{
-        console.log(err);
-    })
-    
-})
 
 // Listen ----------------------------------------------------------------
 
