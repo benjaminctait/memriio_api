@@ -80,7 +80,17 @@ app.post('/createcloud',(req,res) => {
                 userid:adminid,
         })
             .then(id=> {
-                res.json(id[0])
+                if(Array.isArray(id)){
+                    res.json({
+                        created:true,
+                        id:id[0]
+                    })
+                }else{
+                    res.json({
+                        created:false,
+                        id:0
+                    }) 
+                }
             })
         })
         .then(trx.commit)
