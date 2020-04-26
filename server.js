@@ -54,6 +54,41 @@ app.post('/signin',(req,res) => {
     }).catch(err=> res.status(400).json('wrong Credentials'))
 })
 
+
+// create a new memory cloud ---------------------------------------------------
+// creates a new memory cloud with name : name and administrator : adminid
+// then adds adminid as a member of the new cloud
+// Pre: adminid must be an existing user
+//      name must not equal any existing cloud name
+
+app.post('/createcloud',(req,res) => {
+    const {name,adminid} = req.body
+    
+    db.transaction(trx =>{
+        trx.insert({
+            name:name,
+            administrator:adminid,
+            createdon:new Date()
+        })
+        .into('clouds')
+        .returning('id')
+        .then(id =>{
+            return trx('memberships')
+            .returning('groupid')
+            .insert({
+                groupid:id,
+                userid:adminid,
+        })
+            .then(id=> {
+                res.json(id[0])
+            })
+        })
+        .then(trx.commit)
+        .catch(trx.rollback)
+    })
+    .then()
+    
+})
 // register ----------------------------------------------------------------
 
 app.post('/register',(req,res) => {
