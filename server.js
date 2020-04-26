@@ -63,6 +63,7 @@ app.post('/signin',(req,res) => {
 
 app.post('/createcloud',(req,res) => {
     const {name,adminid} = req.body
+    console.log('/createcloud : ' + name + ' admin : ' + adminid);
     
     db.transaction(trx =>{
         trx.insert({
@@ -76,7 +77,7 @@ app.post('/createcloud',(req,res) => {
             return trx('memberships')
             .returning('groupid')
             .insert({
-                groupid:id,
+                groupid:id[0],
                 userid:adminid,
         })
             .then(id=> {
