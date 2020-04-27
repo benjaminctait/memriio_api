@@ -367,6 +367,43 @@ app.post('/get_memories_userid',(req,res) =>{
     }).catch(err=> res.json(err))
 })
 
+// search user ----------------------------------------------------------------
+
+app.post('/get_clouds_userid',(req,res) =>{
+
+    const {userid} = req.body
+    console.log('received get clouds query for user ' + userid);
+    
+    
+    db.select('*')
+    .from('clouds')
+    .where({userid:userid})
+    .orderBy('clouds.createdon','desc')
+    .then(clouds=>{
+        console.log('db returned clouds : ' + clouds);
+        if(Array.isArray(clouds)){
+            res.json({
+                success:true,
+                data:clouds,
+                error:null
+            })
+        }else{
+            res.json({
+                success:false,
+                data:null,
+                error:'Query executed but failed to return results'
+            })
+        }
+    }).catch(err=> {
+        console.log('db returned clouds : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+})
+
 
 // Listen ----------------------------------------------------------------
 
