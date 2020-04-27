@@ -377,7 +377,7 @@ app.post('/get_clouds_userid',(req,res) =>{
     
     db.select('*')
     .from('clouds')
-    .where({userid:userid})
+    .where({id:userid})
     .orderBy('clouds.createdon','desc')
     .then(clouds=>{
         console.log('db returned clouds : ' + clouds);
