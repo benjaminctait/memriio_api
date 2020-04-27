@@ -371,13 +371,14 @@ app.post('/get_memories_userid',(req,res) =>{
 
 app.post('/get_clouds_userid',(req,res) =>{
 
-    const {userid} = req.body
+    const {userID} = req.body
     console.log('received get clouds query for user ' + userid);
     
     
     db.select('*')
     .from('clouds')
-    .where({id:userid})
+    .whereIn('clouds.id',function(){
+        this.select('groupid').from('memberships').where({userid:userID})})
     .orderBy('clouds.createdon','desc')
     .then(clouds=>{
         console.log('db returned clouds : ' + clouds);
