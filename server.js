@@ -367,7 +367,7 @@ app.post('/get_memories_userid',(req,res) =>{
     }).catch(err=> res.json(err))
 })
 
-// search user ----------------------------------------------------------------
+// get clouds for user id  ----------------------------------------------------------------
 
 app.post('/get_clouds_userid',(req,res) =>{
 
@@ -405,6 +405,30 @@ app.post('/get_clouds_userid',(req,res) =>{
     })
 })
 
+// get memory files for user id  ----------------------------------------------------------------
+
+app.post('/get_memfiles_memoryid',(req,res) =>{
+
+    const {memoryid} = req.body
+    console.log('get_memfiles_memoryid req with body :' + req.body);
+    
+    db.select('*')
+    .from('memfiles')
+    .where({memid:memoryid})
+    .orderBy('ishero','desc')
+    .then(memoryFiles=>{
+        console.log('db returned memory files : ' + memoryFiles);
+        if(Array.isArray(memoryFiles)){
+            res.status(200).json({data:memoryFiles})
+        }else{
+            res.status(400).json({data:null,error:err})
+        }
+    }).catch(err=> {
+        console.log('db returned clouds : ' + err)
+        res.status(400).json({data:null,error:err})
+      
+    })
+})
 
 // Listen ----------------------------------------------------------------
 
