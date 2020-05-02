@@ -417,8 +417,8 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
     .where({memid:memoryid})
     .orderBy('ishero','desc')
     .then(memoryFiles=>{
-        console.log('db returned memory files : ' + memoryFiles);
-        console.log('memoryFiles.json() ' + memoryFiles.json());
+        console.log('db returned memory files : ' + memoryFiles)
+        console.log('memoryFiles.json() ' + JSON(memoryFiles))
         
         if(Array.isArray(memoryFiles)){
             res.status(200).json({data:memoryFiles})
@@ -426,7 +426,7 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
             res.status(400).json({data:null,error:err})
         }
     }).catch(err=> {
-        console.log('db returned clouds : ' + err)
+        console.log('db exception : ' + err)
         res.status(400).json({data:null,error:err})
       
     })
