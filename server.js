@@ -418,7 +418,7 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
     .orderBy('ishero','desc')
     .then(memoryFiles=>{
         console.log('db returned memory files : ' + memoryFiles)
-        console.log('memoryFiles.json() ' + JSON(memoryFiles))
+        console.log('memoryFiles.json() ' + JSON.stringify(memoryFiles))
         
         if(Array.isArray(memoryFiles)){
             res.status(200).json({data:memoryFiles})
