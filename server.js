@@ -410,7 +410,7 @@ app.post('/get_clouds_userid',(req,res) =>{
 app.post('/get_memfiles_memoryid',(req,res) =>{
 
     const {memoryid} = req.body
-    console.log('get_memfiles_memoryid req with body :' + req.body);
+    console.log('get_memfiles_memoryid req with body :' + memoryid);
     
     db.select('*')
     .from('memfiles')
@@ -418,6 +418,8 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
     .orderBy('ishero','desc')
     .then(memoryFiles=>{
         console.log('db returned memory files : ' + memoryFiles);
+        console.log('memoryFiles.json() ' + memoryFiles.json());
+        
         if(Array.isArray(memoryFiles)){
             res.status(200).json({data:memoryFiles})
         }else{
