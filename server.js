@@ -423,6 +423,8 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
             console.log('db memfiles is an array ');
             
             res.status(200).json({data:memoryFiles})
+            console.log('db res :' + res);
+            console.log('db res :' + JSON.stringify(res));
           
         }else{
             console.log('db memfiles is not an array ');
