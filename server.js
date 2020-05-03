@@ -417,12 +417,15 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
     .where({memid:memoryid})
     .orderBy('ishero','desc')
     .then(memoryFiles=>{
-        console.log('db returned memory files : ' + memoryFiles)
-        console.log('memoryFiles.json() ' + JSON.stringify(memoryFiles))
+        console.log('db returned : ' + JSON.stringify(memoryFiles))
         
         if(Array.isArray(memoryFiles)){
+            console.log('db memfiles is an array ');
+            
             res.status(200).json({data:memoryFiles})
+          
         }else{
+            console.log('db memfiles is not an array ');
             res.status(400).json({data:null,error:err})
         }
     }).catch(err=> {
