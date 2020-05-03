@@ -421,18 +421,28 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
         
         if(Array.isArray(memoryFiles)){
             console.log('db memfiles is an array ');
-            
-            res.status(200).json({data:memoryFiles})
-            console.log('db res :' + res.json());
-            
+            res.json({
+                success:true,
+                data:memoryFiles,
+                error:null
+            })
+            console.log('db res.data : ' + res.data);
           
         }else{
             console.log('db memfiles is not an array ');
-            res.status(400).json({data:null,error:err})
+            res.json({
+                success:false,
+                data:null,
+                error:'db returned empty result'
+            })
         }
     }).catch(err=> {
         console.log('db exception : ' + err)
-        res.status(400).json({data:null,error:err})
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
       
     })
 })
