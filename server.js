@@ -181,7 +181,7 @@ app.post ('/signedurl',(req,res) =>{
 // create memory --------------------------------------------------
 
 app.post('/creatememory',(req,res) => {
-    const {userid,title,story,location} = req.body
+    const {userid,title,story,description,location} = req.body
     
     db('memories')
         .returning('id')
@@ -189,8 +189,9 @@ app.post('/creatememory',(req,res) => {
             createdon:new Date(),
             userid:userid,
             title:title,
-            story:story,
-            location:location
+            description:description,
+            location:location,
+            story:story
           
     })
         .then(memoryids=> {
@@ -349,7 +350,7 @@ app.post('/get_memories_userid',(req,res) =>{
 
     const {userid} = req.body
     
-    db.select('memories.id', 'memories.userid','memories.title','memories.story','memories.createdon','memfiles.fileurl')
+    db.select('memories.id', 'memories.userid','memories.title','memories.description','memories.story','memories.createdon','memfiles.fileurl')
     .from('memories').join('memfiles', function() {
         this.on('memfiles.memid', '=', 'memories.id').onIn('memfiles.ishero',[true])
       })
@@ -426,7 +427,7 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
                 data:memoryFiles,
                 error:null
             })
-            console.log('db res.data : ' + res.data);
+            console.log('db res : ' + res);
           
         }else{
             console.log('db memfiles is not an array ');
