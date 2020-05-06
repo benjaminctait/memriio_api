@@ -456,7 +456,7 @@ app.post('/set_memory_title',(req,res) =>{
     console.log('set_memory_title req with body :' + memoryid + ' : ' + newTitle) 
     
     db('memories')
-    .where({memid:memoryid})
+    .where({id:memoryid})
     .update({title:newTitle})
     .then(repsonse =>{
         console.log('db update success : ' + response)
