@@ -406,7 +406,7 @@ app.post('/get_clouds_userid',(req,res) =>{
     })
 })
 
-// get memory files for user id  ----------------------------------------------------------------
+// -------------------------------------------------------------------------------------
 
 app.post('/get_memfiles_memoryid',(req,res) =>{
 
@@ -414,7 +414,7 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
     console.log('get_memfiles_memoryid req with body :' + memoryid);
     
     db.select('*')
-    .from('memfiles')
+   
     .where({memid:memoryid})
     .orderBy('ishero','desc')
     .then(memoryFiles=>{
@@ -437,6 +437,34 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
                 error:'db returned empty result'
             })
         }
+    }).catch(err=> {
+        console.log('db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+      
+    })
+})
+
+// -------------------------------------------------------------------------------------
+
+app.post('/set_memory_title',(req,res) =>{
+
+    const {memoryid,newTitle} = req.body
+    console.log('set_memory_title req with body :' + memoryid + ' : ' + newTitle) 
+    
+    db('memories')
+    .where({memid:memoryid})
+    .update({title:newTitle})
+    .then(repsonse =>{
+        console.log('db update success : ' + response)
+        res.json({
+            success:true,
+            data:repsonse,
+            error:null})
+
     }).catch(err=> {
         console.log('db exception : ' + err)
         res.json({
