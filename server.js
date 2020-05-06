@@ -529,11 +529,13 @@ app.post('/set_memory_title',(req,res) =>{
     app.post('/set_memory_story',(req,res) =>{
 
         const {memoryid,newStory} = req.body
-        console.log('set_memory_story req with body :' + memoryid + ' : ' + newStory) 
+        let len = 0
+        if(newStory){len=newStory.len}
+        console.log('set_memory_story req with body :' + memoryid + ' : new story  ' + len + ' chars long') 
         
         db('memories')
         .where({id:memoryid})
-        .update({story:newLocation})
+        .update({story:newStory})
         .catch(err=> {
             console.log('db exception : ' + err)
             res.json({
