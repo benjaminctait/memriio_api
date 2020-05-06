@@ -458,12 +458,11 @@ app.post('/set_memory_title',(req,res) =>{
     db('memories')
     .where({id:memoryid})
     .update({title:newTitle})
-    .then(repsonse =>{
-        console.log('db update success : ' + response)
-        res.json({
-            success:true,
-            data:repsonse,
-            error:null})
+    console.log('db update success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null})
 
     }).catch(err=> {
         console.log('db exception : ' + err)
@@ -474,7 +473,83 @@ app.post('/set_memory_title',(req,res) =>{
         })
       
     })
-})
+
+// -------------------------------------------------------------------------------------
+
+    app.post('/set_memory_description',(req,res) =>{
+
+        const {memoryid,newDescription} = req.body
+        console.log('set_memory_description req with body :' + memoryid + ' : ' + newDescription) 
+        
+        db('memories')
+        .where({id:memoryid})
+        .update({description:newDescription})
+        console.log('db update success : ' + true)
+        res.json({
+            success:true,
+            data:null,
+            error:null})
+
+        }).catch(err=> {
+            console.log('db exception : ' + err)
+            res.json({
+                success:false,
+                data:null,
+                error:err
+            })
+        
+        })
+// -------------------------------------------------------------------------------------
+
+    app.post('/set_memory_location',(req,res) =>{
+
+        const {memoryid,newLocation} = req.body
+        console.log('set_memory_location req with body :' + memoryid + ' : ' + newLocation) 
+        
+        db('memories')
+        .where({id:memoryid})
+        .update({location:newLocation})
+        console.log('db update success : ' + true)
+        res.json({
+            success:true,
+            data:null,
+            error:null})
+
+        }).catch(err=> {
+            console.log('db exception : ' + err)
+            res.json({
+                success:false,
+                data:null,
+                error:err
+            })
+        
+        })
+
+// -------------------------------------------------------------------------------------
+
+    app.post('/set_memory_story',(req,res) =>{
+
+        const {memoryid,newStory} = req.body
+        console.log('set_memory_story req with body :' + memoryid + ' : ' + newStory) 
+        
+        db('memories')
+        .where({id:memoryid})
+        .update({story:newLocation})
+        console.log('db update success : ' + true)
+        res.json({
+            success:true,
+            data:null,
+            error:null})
+
+        }).catch(err=> {
+            console.log('db exception : ' + err)
+            res.json({
+                success:false,
+                data:null,
+                error:err
+            })
+        
+        })
 
 // Listen ----------------------------------------------------------------
 
