@@ -414,7 +414,7 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
     console.log('get_memfiles_memoryid req with body :' + memoryid);
     
     db.select('*')
-   
+    .from('memfiles')
     .where({memid:memoryid})
     .orderBy('ishero','desc')
     .then(memoryFiles=>{
