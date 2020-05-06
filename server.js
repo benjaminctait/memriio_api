@@ -350,7 +350,7 @@ app.post('/get_memories_userid',(req,res) =>{
 
     const {userid} = req.body
     
-    db.select('memories.id', 'memories.userid','memories.title','memories.description','memories.story','memories.createdon','memfiles.fileurl')
+    db.select('memories.id', 'memories.userid','memories.title','memories.description','memories.location','memories.story','memories.createdon','memfiles.fileurl')
     .from('memories').join('memfiles', function() {
         this.on('memfiles.memid', '=', 'memories.id').onIn('memfiles.ishero',[true])
       })
