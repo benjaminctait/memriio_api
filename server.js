@@ -458,21 +458,20 @@ app.post('/set_memory_title',(req,res) =>{
     db('memories')
     .where({id:memoryid})
     .update({title:newTitle})
-    console.log('db update success : ' + true)
-    res.json({
-        success:true,
-        data:null,
-        error:null})
-
-    }).catch(err=> {
+    .catch(err=> {
         console.log('db exception : ' + err)
         res.json({
             success:false,
             data:null,
             error:err
         })
-      
     })
+    console.log('db update success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null})
+})
 
 // -------------------------------------------------------------------------------------
 
@@ -484,21 +483,21 @@ app.post('/set_memory_title',(req,res) =>{
         db('memories')
         .where({id:memoryid})
         .update({description:newDescription})
-        console.log('db update success : ' + true)
-        res.json({
-            success:true,
-            data:null,
-            error:null})
-
-        }).catch(err=> {
+        .catch(err=> {
             console.log('db exception : ' + err)
             res.json({
                 success:false,
                 data:null,
                 error:err
             })
-        
         })
+        console.log('db update success : ' + true)
+        res.json({
+            success:true,
+            data:null,
+            error:null})
+        
+    })
 // -------------------------------------------------------------------------------------
 
     app.post('/set_memory_location',(req,res) =>{
@@ -509,21 +508,21 @@ app.post('/set_memory_title',(req,res) =>{
         db('memories')
         .where({id:memoryid})
         .update({location:newLocation})
-        console.log('db update success : ' + true)
-        res.json({
-            success:true,
-            data:null,
-            error:null})
-
-        }).catch(err=> {
+        .catch(err=> {
             console.log('db exception : ' + err)
             res.json({
                 success:false,
                 data:null,
                 error:err
             })
-        
         })
+        console.log('db update success : ' + true)
+        res.json({
+            success:true,
+            data:null,
+            error:null})
+        
+    })
 
 // -------------------------------------------------------------------------------------
 
@@ -535,21 +534,21 @@ app.post('/set_memory_title',(req,res) =>{
         db('memories')
         .where({id:memoryid})
         .update({story:newLocation})
-        console.log('db update success : ' + true)
-        res.json({
-            success:true,
-            data:null,
-            error:null})
-
-        }).catch(err=> {
+        .catch(err=> {
             console.log('db exception : ' + err)
             res.json({
                 success:false,
                 data:null,
                 error:err
             })
-        
         })
+        console.log('db update success : ' + true)
+        res.json({
+            success:true,
+            data:null,
+            error:null})
+        
+    })
 
 // Listen ----------------------------------------------------------------
 
