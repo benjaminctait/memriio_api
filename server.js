@@ -459,7 +459,7 @@ app.post('/get_associatedpeople_memoryid',(req,res) =>{
     db.select('mempeople.userid', 'users.firstname', 'users.lastname')
     .from('mempeople').join('users', function() {
         this.on('users.id', '=', 'mempeople.userid')})
-    .where('mempeople.memid','=', {memoryid})
+    .where({memid:memoryid})
     .then(people=>{
         console.log('db returned : ' + JSON.stringify(memoryFiles))
         
