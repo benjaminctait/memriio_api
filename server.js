@@ -461,10 +461,10 @@ app.post('/get_associatedpeople_memoryid',(req,res) =>{
         this.on('users.id', '=', 'mempeople.userid')})
     .where({memid:memoryid})
     .then(people=>{
-        console.log('db returned : ' + JSON.stringify(memoryFiles))
+        console.log('db returned : ' + JSON.stringify(people))
         
         if(Array.isArray(people)){
-            console.log('db memfiles is an array :' + JSON.stringify(people));
+            console.log('db people is an array :' + JSON.stringify(people));
             res.json({
                 success:true,
                 data:people,
@@ -472,7 +472,7 @@ app.post('/get_associatedpeople_memoryid',(req,res) =>{
             })
           
         }else{
-            console.log('db memfiles is not an array ');
+            console.log('db people is not an array ');
             res.json({
                 success:false,
                 data:null,
