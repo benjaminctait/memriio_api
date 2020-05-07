@@ -368,6 +368,7 @@ app.post('/get_memories_userid',(req,res) =>{
     }).catch(err=> res.json(err))
 })
 
+
 // get clouds for user id  ----------------------------------------------------------------
 
 app.post('/get_clouds_userid',(req,res) =>{
@@ -447,6 +448,48 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
       
     })
 })
+
+// -------------------------------------------------------------------------------------
+
+app.post('/get_associatedpeople_memoryid',(req,res) =>{
+
+    const {memoryid} = req.body
+    console.log('get_associatedpeople_memoryid req with body :' + memoryid);
+    
+    db.select('mempeople.userid', 'users.firstname', 'users.lastname')
+    .from('mempeople').join('users', function() {
+        this.on('users.id', '=', 'mempeople.userid')})
+    .where('mempeople.memid','=', {memoryid})
+    .then(people=>{
+        console.log('db returned : ' + JSON.stringify(memoryFiles))
+        
+        if(Array.isArray(people)){
+            console.log('db memfiles is an array :' + JSON.stringify(people));
+            res.json({
+                success:true,
+                data:people,
+                error:null
+            })
+          
+        }else{
+            console.log('db memfiles is not an array ');
+            res.json({
+                success:false,
+                data:null,
+                error:'db returned empty result'
+            })
+        }
+    }).catch(err=> {
+        console.log('db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+      
+    })
+})
+
 
 // -------------------------------------------------------------------------------------
 
