@@ -524,12 +524,13 @@ app.post('/get_associatedclouds_memoryid',(req,res) =>{
         console.log('get_associatedclouds_memoryid exception : ' + err)
         res.json({
             success:false,
-            data:null,
+            data:null, 
             error:err
         })
       
     })
-})
+    })
+}
 
 // -------------------------------------------------------------------------------------
 
