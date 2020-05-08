@@ -505,7 +505,7 @@ app.post('/get_associatedclouds_memoryid',(req,res) =>{
         console.log('get_associatedclouds_memoryid returned : ' + JSON.stringify(clouds))
         
         if(Array.isArray(clouds)){
-            console.log('get_associatedclouds_memoryid clouds is an array :' + JSON.stringify(people));
+            console.log('get_associatedclouds_memoryid clouds is an array :' + JSON.stringify(clouds));
             res.json({
                 success:true,
                 data:clouds,
