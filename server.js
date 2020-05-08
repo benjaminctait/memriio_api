@@ -490,6 +490,46 @@ app.post('/get_associatedpeople_memoryid',(req,res) =>{
     })
 })
 
+// -------------------------------------------------------------------------------------
+
+app.post('/get_associatedclouds_memoryid',(req,res) =>{
+
+    const {memoryid} = req.body
+    console.log('get_associatedclouds_memoryid req with body :' + memoryid);
+    
+    db.select('clouds.id', 'clouds.name')
+    .from('clouds')
+    .whereIn('clouds.id',function(){
+        this.select('groupid').from('memgroups').where({memid:memoryid})
+    .then(clouds=>{
+        console.log('get_associatedclouds_memoryid returned : ' + JSON.stringify(clouds))
+        
+        if(Array.isArray(clouds)){
+            console.log('get_associatedclouds_memoryid clouds is an array :' + JSON.stringify(people));
+            res.json({
+                success:true,
+                data:clouds,
+                error:null
+            })
+          
+        }else{
+            console.log('get_associatedclouds_memoryid clouds is not an array ');
+            res.json({
+                success:false,
+                data:null,
+                error:'get_associatedclouds_memoryid returned empty result'
+            })
+        }
+    }).catch(err=> {
+        console.log('get_associatedclouds_memoryid exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+      
+    })
+})
 
 // -------------------------------------------------------------------------------------
 
