@@ -500,7 +500,7 @@ app.post('/get_associatedclouds_memoryid',(req,res) =>{
     db.select('clouds.id', 'clouds.name')
     .from('clouds')
     .whereIn('clouds.id',function(){
-        this.select('groupid').from('memgroups').where({memid:memoryid})
+        this.select('groupid').from('memgroups').where({memid:memoryid})})
     .then(clouds=>{
         console.log('get_associatedclouds_memoryid returned : ' + JSON.stringify(clouds))
         
@@ -527,10 +527,9 @@ app.post('/get_associatedclouds_memoryid',(req,res) =>{
             data:null, 
             error:err
         })
-      
     })
-    })
-}
+    
+})
 
 // -------------------------------------------------------------------------------------
 
