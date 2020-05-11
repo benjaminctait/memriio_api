@@ -512,7 +512,7 @@ app.post('/get_associatedclouds_memoryid',(req,res) =>{
                 error:null
             })
           
-        }else{
+        }else{ 
             console.log('get_associatedclouds_memoryid clouds is not an array ');
             res.json({
                 success:false,
@@ -530,6 +530,181 @@ app.post('/get_associatedclouds_memoryid',(req,res) =>{
     })
     
 })
+
+// -------------------------------------------------------------------------------------
+
+app.post('/get_cloud_people_userid',(req,res) =>{
+
+    const {userid} = req.body
+
+    
+    db.select('*').from('users').whereIn('user.id', function(){
+        this.select('userid').from('memberships').wherein('groupid',function(){
+            this.select('groupid').from('memberships').where({userid:userid})
+        })
+    })
+    .then(people=>{
+        console.log('get_cloud_people_userid returned : ' + JSON.stringify(people))
+        if(Array.isArray(people)){
+            console.log('get_cloud_people_userid clouds is an array :' + JSON.stringify(people));
+            res.json({
+                success:true,
+                data:people,
+                error:null
+            })
+          
+        }else{ 
+            console.log('get_cloud_people_userid clouds is not an array ');
+            res.json({
+                success:false,
+                data:null,
+                error:'get_cloud_people_userid returned empty result'
+            })
+        }
+    }).catch(err=> {
+        console.log('get_cloud_people_userid exception : ' + err)
+        res.json({
+            success:false,
+            data:null, 
+            error:err
+        })
+    })
+
+
+}),
+
+// -------------------------------------------------------------------------------------
+
+app.post('/get_cloud_people_clouds',(req,res) =>{
+
+    const {clouds} = req.body
+
+    
+    db.select('*').from('users').whereIn('user.id', function(){
+        this.select('userid').from('memberships').wherein('groupid',clouds)
+    })
+    .then(people=>{
+        console.log('get_cloud_people_clouds returned : ' + JSON.stringify(people))
+        if(Array.isArray(people)){
+            console.log('get_cloud_people_clouds clouds is an array :' + JSON.stringify(people));
+            res.json({
+                success:true,
+                data:people,
+                error:null
+            })
+          
+        }else{ 
+            console.log('get_cloud_people_clouds clouds is not an array ');
+            res.json({
+                success:false,
+                data:null,
+                error:'get_cloud_people_clouds returned empty result'
+            })
+        }
+    }).catch(err=> {
+        console.log('get_cloud_people_userid exception : ' + err)
+        res.json({
+            success:false,
+            data:null, 
+            error:err
+        })
+    })
+
+
+}),
+
+// -------------------------------------------------------------------------------------
+
+app.post('/set_memory_herofile',(req,res) =>{
+
+
+
+}),
+
+// -------------------------------------------------------------------------------------
+
+app.post('/delete_memory',(req,res) =>{
+
+const {memoryid} = req.body
+
+
+let objects = null
+db.select('fileurl')
+.from('memfiles')
+.where({memid:memoryid})
+.then(memoryFiles=>{
+    console.log('db returned : ' + JSON.stringify(memoryFiles))
+    
+    if(Array.isArray(memoryFiles)){
+        memoryFiles.map(furl => {
+            strarray = furl.split('/')
+            keyname = strarray[strarray.length-1]
+            objects.push({key:keyname})
+            })
+    }
+    var deleteParam = {
+        Bucket: S3_BUCKET,
+        Delete: objects
+    }
+
+    s3.deleteObjects(deleteParam, function(err, data) {
+        if (err) {
+            console.log(err,)
+        }else{
+            console.log('delete from S3 successfull', JSON.stringify(objects))
+            db.transaction(trx =>{
+                trx('memfiles').where('memid',memoryid).del().returning('memid')                 
+                .then(memoryid =>{
+                    return trx('memgroups').where('memid',memoryid).del().returning('memid')
+                })
+                .then(memoryid =>{
+                    return trx('mempeople').where('memid',memoryid).del().returning('memid')
+                })
+                .then(memoryid =>{
+                    return trx('memwords').where('memid',memoryid).del().returning('memid')
+                })
+                .then(memoryid =>{
+                    return trx('memories').where('id',memoryid).del().returning('id')
+                })
+                .then(trx.commit)
+                .then(()=>{
+                    res.json({
+                        success:true,
+                        data:null,
+                        error:null
+                        })
+                    })
+                .catch(err => {
+                    trx.rollback
+                    res.json({
+                        success:false,
+                        data:null,
+                        error:err
+                    })
+                })
+            })
+        } 
+    });
+
+}),
+
+// -------------------------------------------------------------------------------------
+
+app.post('/delete_memory_file',(req,res) =>{
+
+
+
+}),
+
+
+// -------------------------------------------------------------------------------------
+
+app.post('/set_memory_cardtype',(req,res) =>{
+
+    
+
+}),
+
 
 // -------------------------------------------------------------------------------------
 
