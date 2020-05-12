@@ -637,12 +637,11 @@ db.select('fileurl')
     
     if(Array.isArray(memoryFiles)){
         memoryFiles.map(furl => {
-            console.log('furl : ' + JSON.stringify(furl));
-            console.log('furl : ' + JSON.stringify(furl).split('/'));
+            console.log('furl.fileurl : ' + furl.fileurl);
+            console.log('stringify - furl.fileurl : ' + JSON.stringify(furl.fileurl));
+            console.log('furl.fileurl : ' + furl.fileurl.split('/'))
             
-            strarray = JSON.stringify(furl).split('/')
-            console.log('strarray :' + strarray);
-            
+            strarray = JSON.stringify(furl.fileurl).split('/')            
             keyname = strarray[strarray.length-1]
             console.log('keyname ' + keyname);
             
