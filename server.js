@@ -640,7 +640,7 @@ db.select('fileurl')
             console.log('furl : ' + JSON.stringify(furl));
             console.log('furl : ' + JSON.stringify(furl).split('/'));
             
-            strarray = JSON.stringify(furl).split('/').split('/')
+            strarray = JSON.stringify(furl).split('/')
             console.log('strarray :' + strarray);
             
             keyname = strarray[strarray.length-1]
