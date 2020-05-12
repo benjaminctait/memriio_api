@@ -648,9 +648,14 @@ db.select('fileurl')
     }
     var deleteParam = {
         Bucket: S3_BUCKET,
-        Delete: objects
+        Delete: {
+            Objects:objects
+        }
+        
     }
 
+    console.log('deleteparam : ' + JSON.stringify(deleteParam))
+    
     s3.deleteObjects(deleteParam, function(err, data) {
         if (err) {
             console.log(err,)
