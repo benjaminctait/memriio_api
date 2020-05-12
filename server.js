@@ -628,7 +628,7 @@ app.post('/delete_memory',(req,res) =>{
 const {memoryid} = req.body
 
 
-let objects = null
+let objects = []
 db.select('fileurl')
 .from('memfiles')
 .where({memid:memoryid})
@@ -637,16 +637,14 @@ db.select('fileurl')
     
     if(Array.isArray(memoryFiles)){
         memoryFiles.map(furl => {
-            console.log('furl.fileurl : ' + furl.fileurl);
-            console.log('stringify - furl.fileurl : ' + JSON.stringify(furl.fileurl));
-            console.log('furl.fileurl : ' + furl.fileurl.split('/'))
-            
-            strarray = JSON.stringify(furl.fileurl).split('/')            
+            strarray = furl.fileurl.split('/')            
             keyname = strarray[strarray.length-1]
             console.log('keyname ' + keyname);
             
             objects.push({key:keyname})
             })
+            console.log('objects : ' + objects);
+            
     }
     var deleteParam = {
         Bucket: S3_BUCKET,
