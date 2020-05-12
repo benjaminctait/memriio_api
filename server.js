@@ -663,19 +663,19 @@ db.select('fileurl')
             console.log('delete from S3 successfull', JSON.stringify(objects))
             db.transaction(trx =>{
                 trx('memfiles').where('memid',memoryid).del().returning('memid')                 
-                .then(memoryid =>{
-                    console.log('delete_memory : delete memfiles : ' + memoryid);
+                .then(response =>{
+                    console.log('delete_memory : delete memfiles : ' + response.memid);
                     return trx('memgroups').where('memid',memoryid).del().returning('memid')
-                })
-                .then(memoryid =>{
+                })+
+                .then(response =>{
                     console.log('delete_memory : delete mempeople : ' + memoryid);
                     return trx('mempeople').where('memid',memoryid).del().returning('memid')
                 })
-                .then(memoryid =>{
+                .then(response =>{
                     console.log('delete_memory : delete memwords : ' + memoryid);
                     return trx('memwords').where('memid',memoryid).del().returning('memid')
                 })
-                .then(memoryid =>{
+                .then(response =>{
                     console.log('delete_memory : delete memories : ' + memoryid);
                     return trx('memories').where('id',memoryid).del().returning('id')
                 })
