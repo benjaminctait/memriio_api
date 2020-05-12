@@ -666,7 +666,7 @@ db.select('fileurl')
                 .then(response =>{
                     console.log('delete_memory : delete memfiles : ' + response.memid);
                     return trx('memgroups').where('memid',memoryid).del().returning('memid')
-                })+
+                })
                 .then(response =>{
                     console.log('delete_memory : delete mempeople : ' + memoryid);
                     return trx('mempeople').where('memid',memoryid).del().returning('memid')
