@@ -626,7 +626,7 @@ app.post('/set_memory_herofile',(req,res) =>{
 app.post('/delete_memory',(req,res) =>{
 
 const {memoryid} = req.body
-
+const s3 = new aws.S3();
 
 let objects = []
 db.select('fileurl')
