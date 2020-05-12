@@ -637,7 +637,8 @@ db.select('fileurl')
     
     if(Array.isArray(memoryFiles)){
         memoryFiles.map(furl => {
-            console.log('furl : ' + furl);
+            console.log('furl : ' + JSON.stringify(furl));
+            console.log('furl : ' + JSON.stringify(furl).split('/'));
             
             strarray = furl.split('/')
             keyname = strarray[strarray.length-1]
