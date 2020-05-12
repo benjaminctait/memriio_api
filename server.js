@@ -641,7 +641,7 @@ db.select('fileurl')
             keyname = strarray[strarray.length-1]
             console.log('keyname ' + keyname);
             
-            objects.push({key:keyname})
+            objects.push({Key:keyname})
             })
             console.log('objects : ' + objects);
             
