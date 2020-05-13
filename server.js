@@ -539,7 +539,7 @@ app.post('/get_cloud_people_userid',(req,res) =>{
 
     
     db.select('*').from('users').whereIn('user.id', function(){
-        this.select('userid').from('memberships').wherein('groupid',function(){
+        this.select('userid').from('memberships').whereIn('groupid',function(){
             this.select('groupid').from('memberships').where({userid:userid})
         })
     })
@@ -581,8 +581,8 @@ app.post('/get_cloud_people_clouds',(req,res) =>{
     const {clouds} = req.body
     clouds.map(cloud =>{cloudIDs.push(cloud.id)})
     
-    db.select('*').from('users').wherein('id', function(){
-        this.select('userid').from('memberships').wherein('groupid',[1,5])})
+    db.select('*').from('users').whereIn('id', function(){
+        this.select('userid').from('memberships').whereIn('groupid',cloudIDs)})
     .then(people=>{
         console.log('get_cloud_people_clouds returned : ' + JSON.stringify(people))
         if(Array.isArray(people)){
