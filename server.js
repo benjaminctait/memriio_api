@@ -585,7 +585,7 @@ app.post('/get_cloud_people_clouds',(req,res) =>{
     })
     
     db.select('*').from('users').whereIn('user.id', function(){
-        this.select('userid').from('memberships').wherein('groupid',cloudIDs)
+        this.select('userid').from('memberships').wherein('groupid',[1])
     })
     .then(people=>{
         console.log('get_cloud_people_clouds returned : ' + JSON.stringify(people))
