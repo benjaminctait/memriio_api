@@ -577,11 +577,15 @@ app.post('/get_cloud_people_userid',(req,res) =>{
 
 app.post('/get_cloud_people_clouds',(req,res) =>{
 
+    const cloudIDs = []
     const {clouds} = req.body
-
+    clouds.map(cloud =>{
+        console.log('get_cloud_people_clouds : cloud.id : ' + cloud.id);
+        cloudIDs.push(cloud.id)
+    })
     
     db.select('*').from('users').whereIn('user.id', function(){
-        this.select('userid').from('memberships').wherein('groupid',clouds)
+        this.select('userid').from('memberships').wherein('groupid',cloudIDs)
     })
     .then(people=>{
         console.log('get_cloud_people_clouds returned : ' + JSON.stringify(people))
