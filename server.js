@@ -687,15 +687,12 @@ db.select('fileurl')
                         error:null
                         })
                     })
-                .catch(err => {
-                    console.log('delete_memory : db returned : ' + err);
-                    
-                    trx.rollback
+                .catch(trx.rollback).then(err =>{
                     res.json({
                         success:false,
                         data:null,
                         error:err
-                    })
+                        })
                 })
             })
         } 
@@ -748,6 +745,78 @@ app.post('/set_memory_title',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
+app.post('/set_memory_tagged_people',(req,res) =>{
+
+    const {memoryid,taggedPeople} = req.body
+    console.log('set_memory_tagged_people req with body :' + memoryid + ' : ' + taggedPeople) 
+    
+    db.transaction(trx =>{
+        trx('mempeople').where('memid',memoryid).del().returning('memid')                 
+        .then(response =>{
+            console.log('set_memory_tagged_people : delete mempeople for memory : ' + response.memid);
+            {
+                taggedPeople.map(person =>{
+                    console.log('set_memory_tagged_people : insert into mempeople memid,userid : ' + memoryid + ', ' + person.userid);
+                    return trx.insert({memid:memoryid,userid:person.userid}).into('mempeople').returning('memid')
+                })
+            }
+        })
+        .then(trx.commit)
+        .then(()=>{
+            res.json({
+                success:true,
+                data:null,
+                error:null
+                })
+            })
+        .catch(trx.rollback).then(err =>{
+            res.json({
+                success:false,
+                data:null,
+                error:err
+                })
+    })
+})
+})
+
+// -------------------------------------------------------------------------------------
+
+app.post('/set_memory_clouds',(req,res) =>{
+
+    const {memoryid,clouds} = req.body
+    console.log('set_memory_clouds req with body :' + memoryid + ' : ' + clouds) 
+    
+    db.transaction(trx =>{
+        trx('memgroups').where('memid',memoryid).del().returning('memid')                 
+        .then(response =>{
+            console.log('set_memory_clouds : delete memgroups for memory : ' + response.memid);
+            {
+                clouds.map(cloud =>{
+                    console.log('set_memory_clouds : insert into memgroups memid,cloud.id : ' + memoryid + ', ' + cloud.id);
+                    return trx.insert({memid:memoryid,groupid:cloud.id}).into('memgroups').returning('memid')
+                })
+            }
+        })
+        .then(trx.commit)
+        .then(()=>{
+            res.json({
+                success:true,
+                data:null,
+                error:null
+                })
+            })
+        .catch(trx.rollback).then(err =>{
+            res.json({
+                success:false,
+                data:null,
+                error:err
+             })
+    })
+    })
+})
+
+// -------------------------------------------------------------------------------------
+
     app.post('/set_memory_description',(req,res) =>{
 
         const {memoryid,newDescription} = req.body
@@ -768,7 +837,8 @@ app.post('/set_memory_title',(req,res) =>{
         res.json({
             success:true,
             data:null,
-            error:null})
+            error:null
+        })
         
     })
 // -------------------------------------------------------------------------------------
