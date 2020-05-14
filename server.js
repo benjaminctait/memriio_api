@@ -283,9 +283,9 @@ app.post('/associateGroup',(req,res) => {
 
 app.get('/profile/:id',(req,res) =>{
 
-    const { id } = req.params;
+    const { userid } = req.params;
     
-    db.select('*').from('users').where({id:id}).then(users=>{
+    db.select('*').from('users').where({userid:userid}).then(users=>{
         if(users.length){
             res.json(users[0])
         }else{
@@ -300,9 +300,9 @@ app.get('/profile/:id',(req,res) =>{
 
 app.get('/memory/:id',(req,res) =>{
 
-    const { id } = req.params;
+    const { userid } = req.params;
     
-    db.select('*').from('memories').where({id:id}).then(memories=>{
+    db.select('*').from('memories').where({userid:userid}).then(memories=>{
         if(memories.length){
             res.json(memories[0])
         }else{
@@ -319,7 +319,7 @@ app.post('/search',(req,res) =>{
     const {words,user} = req.body
 
      
-    db.select('*').from('memories').whereIn('id',function(){
+    db.select('*').from('memories').whereIn('memid',function(){
             this.select('memid').from('memassociates').where('keywords','Like',words.toLowerCase())})
             .andWhere(function(){
                      this.whereIn('memories.groupid',function(){
@@ -350,12 +350,12 @@ app.post('/get_memories_userid',(req,res) =>{
 
     const {userid} = req.body
     
-    db.select('memories.id', 'memories.userid','memories.title','memories.description','memories.location','memories.story','memories.createdon','memfiles.fileurl')
+    db.select('memories.memid', 'memories.userid','memories.title','memories.description','memories.location','memories.story','memories.createdon','memfiles.fileurl')
     .from('memories').join('memfiles', function() {
-        this.on('memfiles.memid', '=', 'memories.id').onIn('memfiles.ishero',[true])
+        this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])
       })
     .where({userid:userid})
-        .orWhereIn('memories.id',function(){this.select('memid').from('memgroups')
+        .orWhereIn('memories.memid',function(){this.select('memid').from('memgroups')
              .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
     .orderBy('memories.createdon','desc')
 
@@ -458,7 +458,7 @@ app.post('/get_associatedpeople_memoryid',(req,res) =>{
     
     db.select('mempeople.userid', 'users.firstname', 'users.lastname')
     .from('mempeople').join('users', function() {
-        this.on('users.id', '=', 'mempeople.userid')})
+        this.on('users.userid', '=', 'mempeople.userid')})
     .where({memid:memoryid})
     .then(people=>{
         console.log('db returned : ' + JSON.stringify(people))
@@ -538,7 +538,7 @@ app.post('/get_cloud_people_userid',(req,res) =>{
     const {userid} = req.body
 
     
-    db.select('*').from('users').whereIn('user.id', function(){
+    db.select('*').from('users').whereIn('user.userid', function(){
         this.select('userid').from('memberships').whereIn('groupid',function(){
             this.select('groupid').from('memberships').where({userid:userid})
         })
@@ -581,7 +581,7 @@ app.post('/get_cloud_people_clouds',(req,res) =>{
     const {clouds} = req.body
     clouds.map(cloud =>{cloudIDs.push(cloud.id)})
     
-    db.select('*').from('users').whereIn('id', function(){
+    db.select('*').from('users').whereIn('users.userid', function(){
         this.select('userid').from('memberships').whereIn('groupid',cloudIDs)})
     .then(people=>{
         console.log('get_cloud_people_clouds returned : ' + JSON.stringify(people))
@@ -677,7 +677,7 @@ db.select('fileurl')
                 })
                 .then(response =>{
                     console.log('delete_memory : delete memories : ' + memoryid);
-                    return trx('memories').where('id',memoryid).del().returning('id')
+                    return trx('memories').where('memid',memoryid).del().returning('memid')
                 })
                 .then(trx.commit)
                 .then(()=>{
@@ -729,7 +729,7 @@ app.post('/set_memory_title',(req,res) =>{
     console.log('set_memory_title req with body :' + memoryid + ' : ' + newTitle) 
     
     db('memories')
-    .where({id:memoryid})
+    .where({memid:memoryid})
     .update({title:newTitle})
     .catch(err=> {
         console.log('db exception : ' + err)
@@ -754,7 +754,7 @@ app.post('/set_memory_title',(req,res) =>{
         console.log('set_memory_description req with body :' + memoryid + ' : ' + newDescription) 
         
         db('memories')
-        .where({id:memoryid})
+        .where({memid:memoryid})
         .update({description:newDescription})
         .catch(err=> {
             console.log('db exception : ' + err)
@@ -779,7 +779,7 @@ app.post('/set_memory_title',(req,res) =>{
         console.log('set_memory_location req with body :' + memoryid + ' : ' + newLocation) 
         
         db('memories')
-        .where({id:memoryid})
+        .where({memid:memoryid})
         .update({location:newLocation})
         .catch(err=> {
             console.log('db exception : ' + err)
@@ -807,7 +807,7 @@ app.post('/set_memory_title',(req,res) =>{
         console.log('set_memory_story req with body :' + memoryid + ' : new story  ' + len + ' chars long') 
         
         db('memories')
-        .where({id:memoryid})
+        .where({memid:memoryid})
         .update({story:newStory})
         .catch(err=> {
             console.log('db exception : ' + err)
