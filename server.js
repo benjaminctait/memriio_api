@@ -245,12 +245,12 @@ app.post('/associateKeyword',(req,res) => {
         .catch(err=> res.status(400).json('unable to associate'))
 })
 
-// Associate a userID with a memory ----------------------------------------------------------------
+// -------------------------------------------------------------------------------------------
 
 app.post('/removeTaggedPerson',(req,res) => {
     const {memid,userid} = req.body
 
-    console.log('associatePerson : memoryid , userid ' + memid + ', ' + userid);
+    console.log('removeTaggedPerson : memoryid , userid ' + memid + ', ' + userid);
     
     db('mempeople')
         .where('memid',memid).andWhere('userid',userid)
@@ -272,6 +272,32 @@ app.post('/removeTaggedPerson',(req,res) => {
         })
 })
 
+// -------------------------------------------------------------------------------------------
+
+app.post('/removeCloudFromMemory',(req,res) => {
+    const {memid,cloudid} = req.body
+
+    console.log('removeCloudFromMemory : memoryid : ' +  memid + ' cloudid :' + cloudid)
+    
+    db('memgroups')
+        .where('memid',memid).andWhere('groupid',cloudid)
+        .returning('*')
+        .del()
+        .then(result=> {
+            res.json({
+                success:true,
+                data:null,
+                error:null
+            })
+        })
+        .catch(err=> {
+            res.json({
+                success:true,
+                data:null,
+                error:null
+            })
+        })
+})
 
 // Associate a userID with a memory ----------------------------------------------------------------
 
@@ -413,7 +439,7 @@ app.post('/get_clouds_userid',(req,res) =>{
         this.select('groupid').from('memberships').where({userid:userID})})
     .orderBy('clouds.createdon','desc')
     .then(clouds=>{
-        console.log('db returned clouds : ' + clouds);
+        console.log('get_clouds_userid : db returned clouds : ' + clouds);
         if(Array.isArray(clouds)){
             res.json({
                 success:true,
@@ -428,7 +454,7 @@ app.post('/get_clouds_userid',(req,res) =>{
             })
         }
     }).catch(err=> {
-        console.log('db returned clouds : ' + err)
+        console.log('get_clouds_userid db returned  : ' + err)
         res.json({
             success:false,
             data:null,
@@ -694,7 +720,7 @@ db.select('fileurl')
             db.transaction(trx =>{
                 trx('memfiles').where('memid',memoryid).del().returning('memid')                 
                 .then(response =>{
-                    console.log('delete_memory : delete memfiles : ' + response.memid);
+                    console.log('delete_memory : delete memfiles : ' + memoryid);
                     return trx('memgroups').where('memid',memoryid).del().returning('memid')
                 })
                 .then(response =>{
@@ -709,14 +735,14 @@ db.select('fileurl')
                     console.log('delete_memory : delete memories : ' + memoryid);
                     return trx('memories').where('memid',memoryid).del().returning('memid')
                 })
-                .then(trx.commit)
-                .then(()=>{
+                .then(trx.commit).then(()=>{
                     res.json({
                         success:true,
                         data:null,
                         error:null
                         })
                     })
+                
                 .catch(trx.rollback).then(err =>{
                     res.json({
                         success:false,
