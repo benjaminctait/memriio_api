@@ -249,6 +249,8 @@ app.post('/associateKeyword',(req,res) => {
 
 app.post('/associatePerson',(req,res) => {
     const {memid,userid} = req.body
+
+    console.log('associatePerson : memoryid , userid ' + memid + ', ' + userid);
     
     db('mempeople')
         .returning('memid')
