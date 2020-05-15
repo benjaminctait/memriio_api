@@ -247,6 +247,34 @@ app.post('/associateKeyword',(req,res) => {
 
 // Associate a userID with a memory ----------------------------------------------------------------
 
+app.post('/removeTaggedPerson',(req,res) => {
+    const {memid,userid} = req.body
+
+    console.log('associatePerson : memoryid , userid ' + memid + ', ' + userid);
+    
+    db('mempeople')
+        .where('memid',memid).andWhere('userid',userid)
+        .returning('*')
+        .del()
+        .then(result=> {
+            res.json({
+                success:true,
+                data:null,
+                error:null
+            })
+        })
+        .catch(err=> {
+            res.json({
+                success:true,
+                data:null,
+                error:null
+            })
+        })
+})
+
+
+// Associate a userID with a memory ----------------------------------------------------------------
+
 app.post('/associatePerson',(req,res) => {
     const {memid,userid} = req.body
 
