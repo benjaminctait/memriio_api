@@ -754,12 +754,12 @@ app.post('/set_memory_tagged_people',(req,res) =>{
         trx('mempeople').where('memid',memoryid).del().returning('memid')                 
         .then(response =>{
             console.log('set_memory_tagged_people : delete mempeople for memory : ' + response.memid);
-            {
+            
                 taggedPeople.map(person =>{
                     console.log('set_memory_tagged_people : insert into mempeople memid,userid : ' + memoryid + ', ' + person.userid);
                     return trx.insert({memid:memoryid,userid:person.userid}).into('mempeople').returning('memid')
                 })
-            }
+          
         })
         .then(trx.commit)
         .then(()=>{
