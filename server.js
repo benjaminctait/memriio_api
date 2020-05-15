@@ -748,17 +748,26 @@ app.post('/set_memory_title',(req,res) =>{
 app.post('/set_memory_tagged_people',(req,res) =>{
 
     const {memoryid,taggedPeople} = req.body
-    console.log('set_memory_tagged_people req with body :' + memoryid + ' : ' + taggedPeople) 
+    addarray = []
+    console.log('set_memory_tagged_people req with body :' + memoryid + ' : ' + JSON.stringify(taggedPeople)) 
     
     db.transaction(trx =>{
         trx('mempeople').where('memid',memoryid).del().returning('memid')                 
         .then(response =>{
-            console.log('set_memory_tagged_people : delete mempeople for memory : ' + response.memid);
+            console.log('set_memory_tagged_people : delete mempeople for memory : ' + JSON.stringify(response.memid));
             
                 taggedPeople.map(person =>{
                     console.log('set_memory_tagged_people : insert into mempeople memid,userid : ' + memoryid + ', ' + person.userid);
-                    return trx.insert({memid:memoryid,userid:person.userid}).into('mempeople').returning('memid')
+                    addarray.push(
+                        {
+                            'memid' : memoryid,
+                            'userid': person.userid
+                        }
+                    )
                 })
+                console.log('set_memory_tagged_people : addarray ' + JSON.stringify(addarray));
+                
+                return trx('mempeople').insert(addarray).returning('*')
           
         })
         .then(trx.commit)
