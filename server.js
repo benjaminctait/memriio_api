@@ -430,7 +430,7 @@ app.post('/get_memories_userid',(req,res) =>{
 app.post('/get_clouds_userid',(req,res) =>{
 
     const {userID} = req.body
-    console.log('received get clouds query for user ' + userID);
+    console.log('get_clouds_userid : received query for user ' + userID);
     
     
     db.select('*')
