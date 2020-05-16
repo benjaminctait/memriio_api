@@ -191,6 +191,7 @@ app.post('/creatememory',(req,res) => {
             title:title,
             description:description,
             location:location,
+            cardtype:0,
             story:story
           
     })
@@ -406,7 +407,15 @@ app.post('/get_memories_userid',(req,res) =>{
 
     const {userid} = req.body
     
-    db.select('memories.memid', 'memories.userid','memories.title','memories.description','memories.location','memories.story','memories.createdon','memfiles.fileurl')
+    db.select('memories.memid', 
+              'memories.userid',
+              'memories.title',
+              'memories.description',
+              'memories.location',
+              'memories.story',
+              'memories.createdon',
+              'memories.cardtype',
+              'memfiles.fileurl')
     .from('memories').join('memfiles', function() {
         this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])
       })
@@ -760,15 +769,33 @@ db.select('fileurl')
 
 app.post('/delete_memory_file',(req,res) =>{
 
-
-
+    
 })
 
 
 // -------------------------------------------------------------------------------------
 
 app.post('/set_memory_cardtype',(req,res) =>{
-
+    const {memoryid,cardtype} = req.body
+    console.log('set_memory_cardtype req with body :' + memoryid + ' : ' + cardtype) 
+    
+    db('memories')
+    .where({memid:memoryid})
+    .update({cardtype:cardtype})
+    .catch(err=> {
+        console.log('set_memory_cardtype db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('set_memory_cardtype db update success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null
+    })
     
 
 })
