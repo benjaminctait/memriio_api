@@ -443,6 +443,8 @@ app.post('/set_searchwords_memid',(req,res)=>{
         trx('memwords').where({memid:memid}).del()
         .then(() =>{
            searchwords.map(worditem =>{
+            console.log('set_searchwords_memid : addarray' + JSON.stringify(worditem));
+               
                 addarray.push(
                 {
                    memid:worditem.memid,
