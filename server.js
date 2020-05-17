@@ -447,7 +447,7 @@ app.post('/set_searchwords_memid',(req,res)=>{
                
                 addarray.push(
                 {
-                   memid:worditem.memid,
+                   memid:memid,
                    keyword:worditem.keyword,
                    strength:worditem.strength 
                 })
