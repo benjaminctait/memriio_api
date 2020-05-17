@@ -434,7 +434,7 @@ app.post('/get_memories_userid',(req,res) =>{
 })
 
 // --------------------------------------------------------------------------------
-app.post('set_searchwords_memid',(req,res)=>{
+app.post('/set_searchwords_memid',(req,res)=>{
     const {memid,searchwords } = req.body
     addarray = []
     console.log('set_searchwords_memid : memid ' + memid + ' words ' + JSON.stringify(searchwords));
