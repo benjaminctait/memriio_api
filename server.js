@@ -437,7 +437,8 @@ app.post('/get_memories_userid',(req,res) =>{
 app.post('set_searchwords_memid',(req,res)=>{
     const {memid,searchwords } = req.body
     addarray = []
-
+    console.log('set_searchwords_memid : memid ' + memid + ' words ' + JSON.stringify(searchwords));
+    
     db.transaction(trx =>{
         trx('memwords').where({memid:memid}).del()
         .then(() =>{
@@ -450,10 +451,13 @@ app.post('set_searchwords_memid',(req,res)=>{
                 })
                
            })
+           console.log('set_searchwords_memid : addarray' + JSON.stringify(addarray));
+           
            return trx('memwords').insert(addarray)
         })
         .then(trx.commit)
         .then(()=>{
+            console.log('set_searchwords_memid : commit = ' + true);
             res.json({
                 success:true,
                 data:null,
@@ -461,6 +465,8 @@ app.post('set_searchwords_memid',(req,res)=>{
                 })
             })
         .catch(trx.rollback).then(err =>{
+            console.log('set_searchwords_memid : commit = ' + false);
+            console.log('set_searchwords_memid : error = ' + err);
             res.json({
                 success:false,
                 data:null,
@@ -475,7 +481,8 @@ app.post('set_searchwords_memid',(req,res)=>{
 app.post('/get_searchwords_memid',(req,res) =>{
 
     const {memid} = req.body
-    
+    console.log('get_searchwords_memid : memid ' + memid )
+
     db.select('*')
     .from('memwords').j
     .where({memid:memid}) 
