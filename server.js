@@ -484,7 +484,7 @@ app.post('/get_searchwords_memid',(req,res) =>{
     console.log('get_searchwords_memid : memid ' + memid )
 
     db.select('*')
-    .from('memwords').j
+    .from('memwords')
     .where({memid:memid}) 
     .orderBy('strength','desc')
 
