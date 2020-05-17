@@ -433,8 +433,82 @@ app.post('/get_memories_userid',(req,res) =>{
     }).catch(err=> res.json(err))
 })
 
+// --------------------------------------------------------------------------------
+app.post('set_searchwords_memid',(req,res)=>{
+    const {memid,searchwords } = req.body
+    addarray = []
 
-// get clouds for user id  ----------------------------------------------------------------
+    db.transaction(trx =>{
+        trx('memwords').where({memid:memid}).del()
+        .then(() =>{
+           searchwords.map(worditem =>{
+                addarray.push(
+                {
+                   memid:worditem.memid,
+                   keyword:worditem.keyword,
+                   strength:worditem.strength 
+                })
+               
+           })
+           return trx('memwords').insert(addarray)
+        })
+        .then(trx.commit)
+        .then(()=>{
+            res.json({
+                success:true,
+                data:null,
+                error:null
+                })
+            })
+        .catch(trx.rollback).then(err =>{
+            res.json({
+                success:false,
+                data:null,
+                error:err
+                })
+    })
+})
+})
+// --------------------------------------------------------------------------------
+
+
+app.post('/get_searchwords_memid',(req,res) =>{
+
+    const {memid} = req.body
+    
+    db.select('*')
+    .from('memwords').j
+    .where({memid:memid}) 
+    .orderBy('strength','desc')
+
+    .then(words=>{
+        if(Array.isArray(words)){
+            console.log('get_searchwords_memid succesfull = ' + true)
+            res.json({
+                success:true,
+                data:words,
+                error:null
+            })
+        }else{
+            console.log('get_searchwords_memid succesfull = ' + false)
+            res.json({
+                success:false,
+                data:null,
+                error:null
+            })
+        }
+    }).catch(err=> {
+        console.log('get_searchwords_memid error = ' + err)
+            res.json({
+                success:false,
+                data:null,
+                error:err
+            })
+    })
+})
+
+
+//----------------------------------------------------------------------------
 
 app.post('/get_clouds_userid',(req,res) =>{
 
