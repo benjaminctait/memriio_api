@@ -396,10 +396,20 @@ app.post('/get_memories_keywords_user',(req,res) =>{
             
 
     .then(memories=>{
-        if(memories.length){
-            res.json(memories)
+        if(Array.isArray(memories)){
+            console.log('get_memories_keywords_user : success = ' + true);
+            res.json({
+                success:true,
+                data:memories,
+                error:null
+                })
+            
         }else{
-            res.status(400).json('no memories found')
+            res.json({
+                success:false,
+                data:null,
+                error:'No memories found'
+                })
         }
     })
     .catch(err=> res.status(400).json('no memories found'))
@@ -434,7 +444,12 @@ app.post('/get_memories_userid',(req,res) =>{
         }else{
             res.status(400).json('no matching memories found')
         }
-    }).catch(err=> res.json(err))
+    }).catch(err=> res.json({
+                success:false,
+                data:null,
+                error:err
+                })
+            )
 })
 
 // --------------------------------------------------------------------------------
