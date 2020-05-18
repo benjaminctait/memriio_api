@@ -393,7 +393,7 @@ app.post('/get_memories_keywords_user',(req,res) =>{
                 .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
     .andWhere(function(){
         this.whereIn('memid',function(){
-            this.select('memid').from('memwords').where('keywords','Like',words.toLowerCase())})})
+            this.select('memid').from('memwords').where('keyword','Like',words.toLowerCase())})})
     .orderBy('memories.createdon','desc')
             
 
@@ -415,7 +415,14 @@ app.post('/get_memories_keywords_user',(req,res) =>{
                 })
         }
     })
-    .catch(err=> res.status(400).json('no memories found'))
+    .catch(err=> {
+        console.log('get_memories_keywords_user : err : ' + err) 
+        res.json({
+            success:false,
+            data:null,
+            error:err
+            })  
+    })
 })
 
 // search user ----------------------------------------------------------------
