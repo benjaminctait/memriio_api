@@ -300,6 +300,35 @@ app.post('/removeCloudFromMemory',(req,res) => {
         })
 })
 
+// -------------------------------------------------------------------------------------------
+
+app.post('/removeFileFromMemory_fileurl',(req,res) => {
+    const {memid,fileurl} = req.body
+
+    console.log('removeFileFromMemory_fileurl : memoryid : ' +  memid + ' cloudid :' + fileurl)
+    
+    db('memgfiles')
+        .where('memid',memid).andWhere('fileurl',fileurl)
+        .returning('*')
+        .del()
+        .then(result=> {
+            res.json({
+                success:true,
+                data:result,
+                error:null
+            })
+        })
+        .catch(err=> {
+            res.json({
+                success:true,
+                data:null,
+                error:err
+            })
+        })
+})
+
+
+
 // Associate a userID with a memory ----------------------------------------------------------------
 
 app.post('/associatePerson',(req,res) => {
@@ -468,6 +497,7 @@ app.post('/get_memories_userid',(req,res) =>{
 })
 
 // --------------------------------------------------------------------------------
+
 app.post('/set_searchwords_memid',(req,res)=>{
     const {memid,searchwords } = req.body
     addarray = []
