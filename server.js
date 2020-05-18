@@ -374,6 +374,8 @@ app.get('/memory/:id',(req,res) =>{
 app.post('/get_memories_keywords_user',(req,res) =>{
 
     const {words,userid} = req.body
+    console.log('get_memories_keywords_user : ueserid : ' + userid + ' words ' + words);
+    
     
     db.select(  'memories.memid', 
                 'memories.userid',
