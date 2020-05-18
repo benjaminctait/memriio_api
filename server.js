@@ -398,6 +398,7 @@ app.post('/get_memories_keywords_user',(req,res) =>{
             
 
     .then(memories=>{
+        console.log('get_memories_keywords_user : memories : ' + memories )
         if(Array.isArray(memories)){
             console.log('get_memories_keywords_user : success = ' + true);
             res.json({
