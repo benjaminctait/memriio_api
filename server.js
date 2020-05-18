@@ -389,11 +389,11 @@ app.post('/get_memories_keywords_user',(req,res) =>{
     .from('memories').join('memfiles', function() {
         this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
     .where({userid:userid})
-        .orWhereIn('memories.memid',function(){this.select('memid').from('memgroups')
-                .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
+        .orWhereIn('memories.memid',function(){this.select('memgroups.memid').from('memgroups')
+                .whereIn('memgroups.groupid',function(){this.select('memberships.groupid').from('memberships').where({userid:userid})})})
     .andWhere(function(){
-        this.whereIn('memid',function(){
-            this.select('memid').from('memwords').where('keyword','Like',words.toLowerCase())})})
+        this.whereIn('memories.memid',function(){
+            this.select('memwords.memid').from('memwords').where('keyword','Like',words.toLowerCase())})})
     .orderBy('memories.createdon','desc')
             
 
