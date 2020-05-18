@@ -307,7 +307,7 @@ app.post('/removeFileFromMemory_fileurl',(req,res) => {
 
     console.log('removeFileFromMemory_fileurl : memoryid : ' +  memid + ' cloudid :' + fileurl)
     
-    db('memgfiles')
+    db('memfiles')
         .where('memid',memid).andWhere('fileurl',fileurl)
         .returning('*')
         .del()
