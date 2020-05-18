@@ -371,33 +371,37 @@ app.get('/memory/:id',(req,res) =>{
 
 // search ----------------------------------------------------------------
 
-app.post('/search',(req,res) =>{
+app.post('/get_memories_keywords_user',(req,res) =>{
 
-    const {words,user} = req.body
+    const {words,userid} = req.body
+    
+    db.select(  'memories.memid', 
+                'memories.userid',
+                'memories.title',
+                'memories.description',
+                'memories.location',
+                'memories.story',
+                'memories.createdon',
+                'memories.cardtype',
+                'memfiles.fileurl')
+    .from('memories').join('memfiles', function() {
+        this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
+    .where({userid:userid})
+        .orWhereIn('memories.memid',function(){this.select('memid').from('memgroups')
+                .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
+    .andWhere(function(){
+        this.whereIn('memid',function(){
+            this.select('memid').from('memwords').where('keywords','Like',words.toLowerCase())})})
+    .orderBy('memories.createdon','desc')
+            
 
-     
-    db.select('*').from('memories').whereIn('memid',function(){
-            this.select('memid').from('memassociates').where('keywords','Like',words.toLowerCase())})
-            .andWhere(function(){
-                     this.whereIn('memories.groupid',function(){
-                         this.select('groupid').from('memberships').where({userid:user})
-                     })
-                 })
-             .union(function(){
-                      this.select('*').from('memories').whereIn('id',function(){
-                          this.select('memid').from('memassociates').where('keywords','like',words.toLowerCase())
-                      .andWhere({groupid:0,userid:user})
-                      })
-                  })
-                
-  
-        .then(memories=>{
-            if(memories.length){
-                res.json(memories)
-            }else{
-                res.status(400).json('no memories found')
-            }
-        })
+    .then(memories=>{
+        if(memories.length){
+            res.json(memories)
+        }else{
+            res.status(400).json('no memories found')
+        }
+    })
     .catch(err=> res.status(400).json('no memories found'))
 })
 
