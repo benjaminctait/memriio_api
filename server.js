@@ -354,19 +354,22 @@ app.post('/setHeroImage_fileurl',(req,res) => {
     db.transaction(trx =>{
         trx('memfiles').where('memid',memid).update({ishero:false})   
     .then(() => {
-        trx('memfiles')
-        .where('memid',memid).andWhere('fileurl',fileurl)
-        .update({ishero:true})
-        .returning('*')
+        console.log('inside then ' + fileurl);
+        
+        return trx('memfiles')
+            .where('memid',memid).andWhere('fileurl',fileurl)
+            .update({ishero:true})
+            .returning('*')
+        })
     })
     .then(trx.commit) 
-    .then(result=> {
-            res.json({
-                success:true,
-                data:result,
-                error:null
+        .then(result=> {
+                res.json({
+                    success:true,
+                    data:result,
+                    error:null
+                })
             })
-        })
     .catch(err=> {
         res.json({
             success:true,
@@ -375,8 +378,6 @@ app.post('/setHeroImage_fileurl',(req,res) => {
         })
     })
 })
-})
-
 
 
 // Associate a userID with a memory ----------------------------------------------------------------
