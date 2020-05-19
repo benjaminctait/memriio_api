@@ -348,14 +348,11 @@ app.post('/removeFileFromMemory_fileurl',(req,res) => {
 
 app.post('/setHeroImage_fileurl',(req,res) => {
     const {memid,fileurl} = req.body
-
     console.log('setHeroImage_fileurl : memoryid : ' +  memid + ' fileurl :' + fileurl)
     
     db.transaction(trx =>{
         trx('memfiles').where('memid',memid).update({ishero:false})   
-    .then(() => {
-        console.log('inside then() ' + memid + ' ' + fileurl);
-        
+    .then(() => {        
         return trx('memfiles')
             .where('memid',memid).andWhere('fileurl',fileurl)
             .update({ishero:true})
@@ -363,8 +360,6 @@ app.post('/setHeroImage_fileurl',(req,res) => {
         })
         .then(trx.commit) 
         .then(result=> {
-                console.log('result ' + JSON.stringify(result));
-                
                 res.json({
                     success:true,
                     data:result,
