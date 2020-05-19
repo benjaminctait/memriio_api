@@ -304,24 +304,20 @@ app.post('/removeCloudFromMemory',(req,res) => {
 
 app.post('/removeFileFromMemory_fileurl',(req,res) => {
     const {memid,fileurl} = req.body
-    
+    const s3 = new aws.S3();
+  
     console.log('removeFileFromMemory_fileurl : memoryid : ' +  memid + ' fileurl :' + fileurl)
 
-    
-    const s3 = new aws.S3();
     strarray = fileurl.split('/')            
     keyname = strarray[strarray.length-1]
     console.log('removeFileFromMemory_fileurl : keyname ' + keyname);
-    objects.push({Key:keyname})
-    console.log('removeFileFromMemory_fileurl : objects : ' + objects);
     var deleteParam = {
         Bucket: S3_BUCKET,
-        Delete: {
-            Objects:objects
-        }
+        Key:keyname
     }
     console.log('removeFileFromMemory_fileurl : deleteparam : ' + JSON.stringify(deleteParam))
-    s3.deleteObjects(deleteParam, function(err, data) {
+    
+    s3.deleteObject(deleteParam, function(err, data) {
         if (err) {
             console.log('removeFileFromMemory_fileurl : err ' + err,)
         }else{
