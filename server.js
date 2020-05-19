@@ -354,29 +354,32 @@ app.post('/setHeroImage_fileurl',(req,res) => {
     db.transaction(trx =>{
         trx('memfiles').where('memid',memid).update({ishero:false})   
     .then(() => {
-        console.log('inside then ' + fileurl);
+        console.log('inside then() ' + memid + ' ' + fileurl);
         
         return trx('memfiles')
             .where('memid',memid).andWhere('fileurl',fileurl)
             .update({ishero:true})
             .returning('*')
         })
-    })
-    .then(trx.commit) 
+        .then(trx.commit) 
         .then(result=> {
+                console.log('result ' + JSON.stringify(result));
+                
                 res.json({
                     success:true,
                     data:result,
                     error:null
                 })
             })
-    .catch(err=> {
-        res.json({
-            success:true,
-            data:null,
-            error:err
+        .catch(err=> {
+            res.json({
+                success:true,
+                data:null,
+                error:err
+            })
         })
     })
+    
 })
 
 
