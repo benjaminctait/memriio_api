@@ -303,10 +303,11 @@ app.post('/removeCloudFromMemory',(req,res) => {
 // -------------------------------------------------------------------------------------------
 
 app.post('/removeFileFromMemory_fileurl',(req,res) => {
+    const {memid,fileurl} = req.body
     
     console.log('removeFileFromMemory_fileurl : memoryid : ' +  memid + ' fileurl :' + fileurl)
 
-    const {memid,fileurl} = req.body
+    
     const s3 = new aws.S3();
     strarray = fileurl.split('/')            
     keyname = strarray[strarray.length-1]
