@@ -469,13 +469,13 @@ app.post('/get_memories_keywords_user',(req,res) =>{
     .where({userid:userid})
     .andWhere(function(){
         this.whereIn('memories.memid',function(){
-            this.select('memwords.memid').from('memwords').where('keyword','Like',words.toLowerCase())})})
+            this.select('memwords.memid').from('memwords').whereIn('keyword',words)})})
 
     .orWhereIn('memories.memid',function(){this.select('memgroups.memid').from('memgroups')
             .whereIn('memgroups.groupid',function(){this.select('memberships.groupid').from('memberships').where({userid:userid})})})
             .andWhere(function(){
                 this.whereIn('memories.memid',function(){
-                    this.select('memwords.memid').from('memwords').where('keyword','Like',words.toLowerCase())})})
+                    this.select('memwords.memid').from('memwords').whereIn('keyword',words)})})
     
     .orderBy('memories.createdon','desc')
             
