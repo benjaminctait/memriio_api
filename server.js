@@ -358,7 +358,8 @@ app.post('/setHeroImage_fileurl',(req,res) => {
         .where('memid',memid).andWhere('fileurl',fileurl)
         .update({ishero:true})
         .returning('*')
-    }) 
+    })
+    .then(trx.commit) 
     .then(result=> {
             res.json({
                 success:true,
@@ -872,15 +873,8 @@ app.post('/get_cloud_people_clouds',(req,res) =>{
     })
 
 
-})
+}
 
-// -------------------------------------------------------------------------------------
-
-app.post('/set_memory_herofile',(req,res) =>{
-
-
-
-})
 
 // -------------------------------------------------------------------------------------
 
