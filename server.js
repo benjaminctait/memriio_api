@@ -184,7 +184,7 @@ app.post('/creatememory',(req,res) => {
     const {userid,title,story,description,location} = req.body
     
     db('memories')
-        .returning('id')
+        .returning('memid')
         .insert({
             createdon:new Date(),
             userid:userid,
@@ -199,12 +199,12 @@ app.post('/creatememory',(req,res) => {
             if(memoryids.length > 0){
                 res.json({
                     created:true,
-                    id:memoryids[0]
+                    memid:memoryids[0]
                 })
             }else{
                 res.json({
                     created:false,
-                    id:0
+                    memid:0
                 })
             }
         })
