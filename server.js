@@ -452,7 +452,7 @@ app.get('/memory/:id',(req,res) =>{
 app.post('/get_memories_keywords_user',(req,res) =>{
 
     const {words,userid} = req.body
-    console.log('get_memories_keywords_user : ueserid : ' + userid + ' words ' + words);
+    console.log('get_memories_keywords_user : userid : ' + userid + ' words ' + words);
     
     
     db.select(  'memories.memid', 
@@ -532,6 +532,7 @@ app.post('/get_memories_userid',(req,res) =>{
     .orderBy('memories.createdon','desc')
 
     .then(memories=>{
+        console.log('get_memories_userid : memories : ' + memories )
         if(memories.length){
             res.json(memories)
         }else{
