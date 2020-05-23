@@ -464,7 +464,8 @@ app.post('/get_memories_keywords_user',(req,res) =>{
                 'memories.story',
                 'memories.createdon',
                 'memories.cardtype',
-                'memfiles.fileurl')
+                'memfiles.fileurl',
+                'memfiles.fileext')
     .from('memories').join('memfiles', function() {
         this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
     .where({userid:userid})
@@ -523,7 +524,8 @@ app.post('/get_memories_userid',(req,res) =>{
               'memories.story',
               'memories.createdon',
               'memories.cardtype',
-              'memfiles.fileurl')
+              'memfiles.fileurl',
+              'memfiles.fileext')
     .from('memories').join('memfiles', function() {
         this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])
       })
