@@ -184,14 +184,11 @@ app.post ('/getObject_signedurl',(req,res) =>{
 
     const s3 = new aws.S3(); 
     const fileName = req.body.fileName;
-    const fileType = req.body.fileType;
-
-
+   
     const s3Params = {
         Bucket: S3_BUCKET,
         Key: fileName,
         Expires: 500,
-        ContentType: fileType,
     };
     
     s3.getSignedUrl('getObject', s3Params, (err, signedURL) => {
