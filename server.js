@@ -134,18 +134,15 @@ app.post('/register',(req,res) => {
     
 })
 
-// get signed URL FROM AWS ----------------------------------------------------------------
+// get 'PUT' signed URL FROM AWS ----------------------------------------------------------------
 
+app.post ('/putobject_signedurl',(req,res) =>{
 
-app.post ('/signedurl',(req,res) =>{
-
-    console.log('made it to getSignedURL', req.body);
+    console.log('put_signedurl', req.body);
 
     const s3 = new aws.S3(); // Create a new instance of S3
     const fileName = req.body.fileName;
     const fileType = req.body.fileType;
-
-    
 
     const s3Params = {
         Bucket: S3_BUCKET,
@@ -171,6 +168,41 @@ app.post ('/signedurl',(req,res) =>{
                 success:true,
                 signedURL: returnData.signedRequest,
                 url:returnData.url
+             }) 
+             
+        }
+    });
+
+})
+
+
+// get 'GET' signed URL FROM AWS ----------------------------------------------------------------
+
+app.post ('/getObject_signedurl',(req,res) =>{
+
+    console.log('getObject_signedurl', req.body);
+
+    const s3 = new aws.S3(); 
+    const fileName = req.body.fileName;
+    const fileType = req.body.fileType;
+
+
+    const s3Params = {
+        Bucket: S3_BUCKET,
+        Key: fileName,
+        Expires: 500,
+        ContentType: fileType,
+    };
+    
+    s3.getSignedUrl('getObject', s3Params, (err, signedURL) => {
+        if (err) {
+            console.log('getobject_signedurl Err : ',err);
+            res.json({ success: false, error: err });
+        }else{
+            res.json( {
+                success:true,
+                signedURL: signedURL,
+                error=null
              }) 
              
         }
