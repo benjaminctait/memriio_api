@@ -565,10 +565,20 @@ app.post('/get_memories_userid',(req,res) =>{
 
     .then(memories=>{
         console.log('get_memories_userid : memories : ' + memories )
-        if(memories.length){
-            res.json(memories)
+        if(Array.isArray(memories)){
+            console.log('get_memories_userid : success = ' + true);
+            res.json({
+                success:true,
+                data:memories,
+                error:null
+                })
+            
         }else{
-            res.status(400).json('no matching memories found')
+            res.json({
+                success:false,
+                data:null,
+                error:'No memories found'
+                })
         }
     }).catch(err=> res.json({
                 success:false,
