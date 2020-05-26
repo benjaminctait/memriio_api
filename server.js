@@ -188,7 +188,7 @@ app.post ('/getObject_signedurl',(req,res) =>{
     const s3Params = {
         Bucket: S3_BUCKET,
         Key: fileName,
-        Expires: 500,
+        Expires: 604800,
     };
     
     s3.getSignedUrl('getObject', s3Params, (err, signedURL) => {
