@@ -198,8 +198,8 @@ app.post ('/getObject_signedurl',(req,res) =>{
         }else{
             res.json( {
                 success:true,
-                signedURL: signedURL,
-                error=null
+                signedURL:signedURL,
+                error:null
              }) 
              
         }
