@@ -555,7 +555,7 @@ app.post('/get_memories_userid',(req,res) =>{
               'memories.story',
               'memories.createdon',
               'memories.cardtype',
-              'memfiles.thmburl',
+              'memfiles.thumburl',
               'memfiles.fileext')
     .from('memories').join('memfiles', function() {
         this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])
