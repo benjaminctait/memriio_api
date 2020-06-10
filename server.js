@@ -653,10 +653,10 @@ app.post('/get_memories_userid_cloudids',(req,res) =>{
     db.select('*')
     .from('memories')
     .where({userid:userid})
-    .WhereIn('memories.memid',function(){this.select('memid').from('memgroups')
-        .whereIn('memgroups.groupid',cloudids)})
+    .andWhere(function(){
+        this.whereIn('memories.memid',function(){this.select('memid').from('memgroups')
+        .whereIn('memgroups.groupid',cloudids)})})
     .orderBy('memories.createdon','desc')
-
     .then(memories=>{
         
         if(Array.isArray(memories)){
