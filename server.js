@@ -661,7 +661,7 @@ app.post('/get_memories_userid_cloudids',(req,res) =>{
         
         if(Array.isArray(memories)){
             console.log('get_memories_userid_cloudids : success = ' + true);
-            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' id' + mem.memid + ' Title ' + mem.title )})
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' id ' + mem.memid + ' Title ' + mem.title )})
             res.json({
                 success:true,
                 data:memories,
@@ -818,10 +818,14 @@ app.post('/get_memfiles_memoryid',(req,res) =>{
     .where({memid:memoryid})
     .orderBy('ishero','desc')
     .then(memoryFiles=>{
-        console.log('db returned : ' + JSON.stringify(memoryFiles))
         
         if(Array.isArray(memoryFiles)){
-            console.log('db memfiles is an array ');
+            
+            memoryFiles.map((mf,index) => {
+                    console.log('memfile file  : ' + JSON.stringify(mf.fileurl))
+                    console.log('memfile thumb : ' + JSON.stringify(mf.thumburl))
+                })
+            
             res.json({
                 success:true,
                 data:memoryFiles,
