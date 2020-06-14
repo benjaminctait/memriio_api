@@ -450,7 +450,7 @@ app.post('/associateGroup',(req,res) => {
 
 app.post('/getUser_userid',(req,res) =>{
 
-    const { userid } = req.params;
+    const { userid } = req.body;
     console.log('getUser : ' + userid);
         
     db.select('*').from('users').where({userid:userid}).then(users=>{
