@@ -448,7 +448,7 @@ app.post('/associateGroup',(req,res) => {
 
 // profile/id ----------------------------------------------------------------
 
-app.get('/getUser_userid',(req,res) =>{
+app.post('/getUser_userid',(req,res) =>{
 
     const { userid } = req.params;
     console.log('getUser : ' + userid);
