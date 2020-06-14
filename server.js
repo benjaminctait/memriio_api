@@ -448,35 +448,38 @@ app.post('/associateGroup',(req,res) => {
 
 // profile/id ----------------------------------------------------------------
 
-app.get('/profile/:id',(req,res) =>{
+app.get('/getUser_userid',(req,res) =>{
 
     const { userid } = req.params;
-    
+    console.log('getUser : ' + userid);
+        
     db.select('*').from('users').where({userid:userid}).then(users=>{
-        if(users.length){
-            res.json(users[0])
+        if(Array.isArray(users)){
+            console.log('get_User returned : userid: ' + users[0].userid + ' ' + users[0].firstname + ' ' + users[0].lastname )
+            
+            res.json({
+                success:true,
+                data:users[0],
+                error:null
+                })
+            
         }else{
-            res.status(400).json('user not found')
+            console.log('get_User returned : userid: ' + userid + ' not found ! ' )
+            res.json({
+                success:false,
+                data:null,
+                error:'User not found'
+                })
         }
     })
-    .catch(err=> res.status(400).json('error getting user profile'))
-    
-})
-
-// memory/id ----------------------------------------------------------------
-
-app.get('/memory/:id',(req,res) =>{
-
-    const { userid } = req.params;
-    
-    db.select('*').from('memories').where({userid:userid}).then(memories=>{
-        if(memories.length){
-            res.json(memories[0])
-        }else{
-            res.status(400).json('memory not found')
-        }
-    })
-    .catch(err=> res.status(400).json('error getting user memory'))
+    .catch(err=> {
+        console.log('get_User returned : userid: ' + userid + ' ' + err )
+        res.json({
+            success:false,
+            data:null,
+            error:err
+            })
+    })    
 })
 
 //------------------------------------------------------------------------------------------------------
