@@ -1127,6 +1127,31 @@ app.post('/set_memory_cardtype',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
+app.post('/set_searchword',(req,res) =>{
+
+    const {id,memid,keyword,strength,included} = req.body
+    console.log('set_searchword req with body :' + id + ' : ' + keyword + ':' + strength + ':' + included) 
+    
+    db('memories')
+    .where({id:id})
+    .update({memid:memid,keyword:keyword,strength:strength,included:included})
+    .catch(err=> {
+        console.log('db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('db update success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null})
+})
+
+// -------------------------------------------------------------------------------------
+
 app.post('/set_memory_title',(req,res) =>{
 
     const {memoryid,newTitle} = req.body
