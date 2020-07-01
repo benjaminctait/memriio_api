@@ -1132,7 +1132,7 @@ app.post('/set_searchword',(req,res) =>{
     const {id,memid,keyword,strength,included} = req.body
     console.log('set_searchword req with body :' + id + ' : ' + keyword + ':' + strength + ':' + included) 
     
-    db('memories')
+    db('memwords')
     .where({id:id})
     .update({memid:memid,keyword:keyword,strength:strength,included:included})
     .catch(err=> {
