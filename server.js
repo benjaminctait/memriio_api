@@ -1,12 +1,14 @@
 const express = require('express')
 const bparser = require('body-parser')
 const bcrypt = require('bcrypt-nodejs')
+const tinify =require('tinify')
 const cors = require('cors')
 const knex = require('knex')
 const aws = require('aws-sdk')
 const Jimp = require('jimp')
 require('dotenv').config(); // Configure dotenv to load in the .env file
 const S3_BUCKET = process.env.S3_BUCKET
+
 const db = knex({
     client: 'pg',
     connection: {
@@ -21,7 +23,7 @@ aws.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     signatureVersion: 'v4'
 })
-
+tinify.key = TINIFY_API_KEY
 
 const app = express();
 app.use(bparser.json());
@@ -1335,6 +1337,54 @@ app.post('/set_memory_clouds',(req,res) =>{
             error:null})
         
     })
+
+
+// -------------------------------------------------------------------------------------
+
+app.post('/upload_compress_thumb_aws',(req,res) =>{
+    
+    const {fileBuffer,fileName,thumbName} = req.body
+    console.log('upload_compress_thumb_aws req with body :' + fileName + ' : ' + thumbName) 
+
+    const origURL  = process.env.S3_BUCKET + '/' + fileName
+    const thumbURL = process.env.S3_BUCKET + '/' + thumbName
+    
+    tinify.fromBuffer(fileBuffer).toBuffer(function(err, fullSizeImage) {
+        if (err) throw err;
+        tinify.fromBuffer(fullSizeImage).resize({
+                method:'cover',
+                width: 1500,
+                height: 540
+                }).store({  // upload the thumb to S3
+                    service: "s3",
+                    aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
+                    region: process.env.REGION,
+                    path: process.env.S3_BUCKET + '/' + thumbName
+                })
+        
+    }).store({ // fullsize optimized image to S3
+        service: "s3",
+        aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
+        region: process.env.REGION,
+        path: process.env.S3_BUCKET + '/' + fileName
+    })
+    .catch(err=> {
+        console.log('db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('db update success : ' + true)
+    res.json({
+        success:true,
+        data:{originalURL:origURL,thumbURL:thumbURL},
+        error:null})
+    
+})
 
 // Listen ----------------------------------------------------------------
 
