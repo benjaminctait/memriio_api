@@ -248,7 +248,7 @@ app.post('/associateFile',(req,res) => {
     const{memid,fileurl,fileext,thumburl,thumbext,ishero} = req.body;
     
 
-    db('memfiles').returning('id')
+    db('memfiles').returning('*')
         .insert({
             memid:memid,
             fileurl:fileurl,
@@ -258,9 +258,19 @@ app.post('/associateFile',(req,res) => {
             ishero:ishero
         })
         .then(result =>{
-            res.json(result[0]);  // returns the memory id if successfull
+            res.json( {
+                success:true,
+                data:result,
+                error:null
+             }) 
 
-        }).catch(err => res.status(400).json(err))
+        }).catch(
+            res.json( {
+                success:true,
+                data:result,
+                error:null
+            })
+        )
     })  
 
 // Associate key words with a memory ----------------------------------------------------------------
