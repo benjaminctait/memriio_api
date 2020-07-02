@@ -23,7 +23,7 @@ aws.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     signatureVersion: 'v4'
 })
-tinify.key = TINIFY_API_KEY
+tinify.key = process.env.TINIFY_API_KEY
 
 const app = express();
 app.use(bparser.json());
@@ -1342,7 +1342,7 @@ app.post('/set_memory_clouds',(req,res) =>{
 // -------------------------------------------------------------------------------------
 
 app.post('/upload_compress_thumb_aws',(req,res) =>{
-    
+
     const {fileBuffer,fileName,thumbName} = req.body
     console.log('upload_compress_thumb_aws req with body :' + fileName + ' : ' + thumbName) 
 
