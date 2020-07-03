@@ -1361,12 +1361,9 @@ app.post('/upload_compress_thumb_aws',(req,res) =>{
     
     tinify.fromBuffer(fileBuffer).toBuffer(function(err, fullSizeImage) {
         if (err) throw err;
-        let thumb = tinify.fromBuffer(fullSizeImage).resize({
-                method:'cover',
-                width: 1500,
-                height: 540
-                }).then(thumb => {
-                    thumb.store({  // upload the thumb to S3
+        let thumb = await fullSizeImage.resize({method:'cover',width: 1500,height: 540})
+
+        thumb.store({  // upload the thumb to S3
                         service: "s3",
                         aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
                         aws_secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
@@ -1374,17 +1371,13 @@ app.post('/upload_compress_thumb_aws',(req,res) =>{
                         path: process.env.S3_BUCKET + '/' + thumbName
                     })
                 })
-                
-        
-    }).then(fullSizeImage.store({ // fullsize optimized image to S3
-        service: "s3",
-        aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
-        region: process.env.REGION,
-        path: process.env.S3_BUCKET + '/' + fileName
-    }))
-    
-    
+        fullSizeImage.store({ // fullsize optimized image to S3
+                    service: "s3",
+                    aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
+                    region: process.env.REGION,
+                    path: process.env.S3_BUCKET + '/' + fileName
+                })    
     .catch(err=> {
         console.log('db exception : ' + err)
         res.json({
