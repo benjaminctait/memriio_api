@@ -1358,10 +1358,10 @@ app.post('/upload_compress_thumb_aws',(req,res) =>{
 
     const origURL  = process.env.S3_BUCKET + '/' + fileName
     const thumbURL = process.env.S3_BUCKET + '/' + thumbName
+    console.log(fileBuffer);
     
     tinify.fromBuffer(fileBuffer).toBuffer(function(err, fullSizeImage) {
         if (err) throw err;
-        
         fullSizeImage.store({ // fullsize optimized image to S3
                     service: "s3",
                     aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
