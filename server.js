@@ -1358,7 +1358,7 @@ app.post('/upload_compress_thumb_aws',(req,res) =>{
 
     const origURL  = process.env.S3_BUCKET + '/' + fileName
     const thumbURL = process.env.S3_BUCKET + '/' + thumbName
-    console.log(fileBuffer);
+    console.log('filecontent' + fileBuffer);
     
     tinify.fromBuffer(fileBuffer).toBuffer(function(err, fullSizeImage) {
         if (err) throw err;
