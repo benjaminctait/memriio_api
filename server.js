@@ -1359,12 +1359,10 @@ app.post('/set_memory_clouds',(req,res) =>{
 app.post('/upload_compress_thumb_aws',(req,res) =>{
 
     const {fileBuffer,fileName,thumbName} = req.body
-    const buf = Buffer.from(fileBuffer)
+    const buf = new Buffer(fileBuffer, 'base64');
     console.log('upload_compress_thumb_aws req with body :' + fileName + ' : ' + thumbName) 
     console.log('fileBuffer ' + Buffer.byteLength(fileBuffer))
     
-    const origURL  = process.env.S3_BUCKET + '/' + fileName
-    const thumbURL = process.env.S3_BUCKET + '/' + thumbName
     let newbuf = tinify.fromBuffer(buf)
 
     
