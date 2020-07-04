@@ -27,8 +27,11 @@ aws.config.update({
 tinify.key = process.env.TINIFY_API_KEY
 
 const app = express();
-app.use(bparser.json());
-app.use(bparser.urlencoded({limit: '50mb'}))
+app.use(bparser.json({limit: '50mb'}));
+app.use(bparser.urlencoded({limit: '50mb', extended: true}));
+app.use(express.json());
+
+
 app.use(cors());
 
 // root ----------------------
