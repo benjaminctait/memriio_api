@@ -28,8 +28,7 @@ tinify.key = process.env.TINIFY_API_KEY
 
 const app = express();
 app.use(bparser.json());
-app.use(express.json({limit: '20mb'}));
-app.use(express.urlencoded({limit: '20mb'}));
+app.use(express.bodyParser({limit: '50mb'}))
 app.use(cors());
 
 // root ----------------------
