@@ -1,4 +1,5 @@
 const express = require('express')
+
 const bparser = require('body-parser')
 const bcrypt = require('bcrypt-nodejs')
 const tinify =require('tinify')
@@ -27,6 +28,8 @@ tinify.key = process.env.TINIFY_API_KEY
 
 const app = express();
 app.use(bparser.json());
+app.use(express.json({limit: '20mb'}));
+app.use(express.urlencoded({limit: '20mb'}));
 app.use(cors());
 
 // root ----------------------
