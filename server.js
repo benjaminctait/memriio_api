@@ -1355,20 +1355,13 @@ app.post('/upload_compress_thumb_aws',(req,res) =>{
 
     const {fileBuffer,fileName,thumbName} = req.body
     console.log('upload_compress_thumb_aws req with body :' + fileName + ' : ' + thumbName) 
-    console.log('filecontent' + fileBuffer);
+    console.log('originalBuffer ' + fileBuffer);
 
-    const origURL  = process.env.S3_BUCKET + '/' + fileName
-    const thumbURL = process.env.S3_BUCKET + '/' + thumbName
-    
-    tinify.fromBuffer(fileBuffer).toBuffer(function(err, fullSizeImage) {
+    tinify.fromBuffer(fileBuffer).toBuffer(function(err, compressedBuffer) {
+        console.log('compressedBuffer ' + compressedBuffer);
+        
         if (err) throw err;
-        fullSizeImage.store({ // fullsize optimized image to S3
-                    service: "s3",
-                    aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
-                    aws_secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
-                    region: process.env.REGION,
-                    path: process.env.S3_BUCKET + '/' + fileName
-                })    
+    })
     .catch(err=> {
         console.log('db exception : ' + err)
         res.json({
@@ -1380,11 +1373,11 @@ app.post('/upload_compress_thumb_aws',(req,res) =>{
     console.log('db update success : ' + true)
     res.json({
         success:true,
-        data:{originalURL:origURL,thumbURL:thumbURL},
+        data:{compressedBuffer},
         error:null})
     
     })
-})
+
 
 // Listen ----------------------------------------------------------------
 
