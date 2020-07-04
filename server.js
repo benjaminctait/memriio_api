@@ -1356,25 +1356,6 @@ app.post('/upload_compress_thumb_aws',(req,res) =>{
     const {fileBuffer,fileName,thumbName} = req.body
     console.log('upload_compress_thumb_aws req with body :' + fileName + ' : ' + thumbName) 
     console.log('originalBuffer ' + fileBuffer);
-
-    tinify.fromBuffer(fileBuffer).toBuffer(function(err, compressedBuffer) {
-        console.log('compressedBuffer ' + compressedBuffer);
-        
-        if (err) throw err;
-    })
-    .catch(err=> {
-        console.log('db exception : ' + err)
-        res.json({
-            success:false,
-            data:null,
-            error:err
-        })
-    })
-    console.log('db update success : ' + true)
-    res.json({
-        success:true,
-        data:{compressedBuffer},
-        error:null})
     
     })
 

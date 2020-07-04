@@ -1,3 +1,52 @@
+
+
+app.post('/upload_compress_thumb_aws',(req,res) =>{
+
+    const {fileBuffer,fileName,thumbName} = req.body
+    console.log('upload_compress_thumb_aws req with body :' + fileName + ' : ' + thumbName) 
+    console.log('originalBuffer ' + fileBuffer);
+
+    const origURL  = process.env.S3_BUCKET + '/' + fileName
+    const thumbURL = process.env.S3_BUCKET + '/' + thumbName
+    
+    tinify.fromBuffer(fileBuffer).toBuffer(function(err, fullSizeImage) {
+        console.log('compressedBuffer ' + fullSizeImage);
+        
+        if (err) throw err;
+        fullSizeImage.store({ // fullsize optimized image to S3
+                    service: "s3",
+                    aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
+                    region: process.env.REGION,
+                    path: process.env.S3_BUCKET + '/' + fileName
+                })    
+    .catch(err=> {
+        console.log('db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('db update success : ' + true)
+    res.json({
+        success:true,
+        data:{originalURL:origURL,thumbURL:thumbURL},
+        error:null})
+    
+    })
+})
+
+
+
+
+
+
+
+
+
+
+
 // Configure aws with your accessKeyId and your secretAccessKey
 aws.config.update({
   region: 'us-east-1', // Put your aws region here
