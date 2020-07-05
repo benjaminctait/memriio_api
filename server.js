@@ -164,17 +164,13 @@ app.post ('/putobject_signedurl',(req,res) =>{
             console.log('Error in s3.getSignedURL',err);
             res.json({ success: false, error: err });
         }else{
-            const returnData = {
-
-                signedRequest: signedURL,
-                url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
-            };
-                        
-            // Send it all back
+            
             res.json( {
                 success:true,
-                signedURL: returnData.signedRequest,
-                url:returnData.url
+                data: {
+                    signedRequest: signedURL,
+                    url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+                }
              }) 
              
         }
@@ -205,7 +201,7 @@ app.post ('/getObject_signedurl',(req,res) =>{
         }else{
             res.json( {
                 success:true,
-                signedURL:signedURL,
+                data:signedURL,
                 error:null
              }) 
              
@@ -1353,24 +1349,6 @@ app.post('/set_memory_clouds',(req,res) =>{
         
     })
 
-
-// -------------------------------------------------------------------------------------
-
-app.post('/upload_compress_thumb_aws',(req,res) =>{
-
-    const {fileBuffer,fileName,thumbName} = req.body
-    const buf = new Buffer(fileBuffer, 'base64');
-    console.log('upload_compress_thumb_aws req with body :' + fileName + ' : ' + thumbName) 
-    console.log('fileBuffer ' + Buffer.byteLength(fileBuffer))
-    
-    let newbuf = tinify.fromBuffer(buf)
-
-    
-    // tinify.fromBuffer(fileBuffer).toBuffer((err, compressedBuffer) => {
-    //     console.log('compressedBuffer ' + Buffer.byteLength(compressedBuffer))
-    
-    // })
-})
 
 
 // Listen ----------------------------------------------------------------
