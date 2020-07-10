@@ -783,6 +783,39 @@ app.post('/get_searchwords_memid',(req,res) =>{
     })
 })
 
+//----------------------------------------------------------------------------
+
+app.post('/get_clouds',(req,res) =>{
+
+    console.log('get_clouds_userid : received query for user ' + userID);
+    
+    db.select('*')
+    .from('clouds')
+    .orderBy('name')
+    .then(clouds=>{
+        console.log('get_clouds : db returned clouds : ' + clouds);
+        if(Array.isArray(clouds)){
+            res.json({
+                success:true,
+                data:clouds,
+                error:null
+            })
+        }else{
+            res.json({
+                success:false,
+                data:null,
+                error:'Query executed but failed to return results'
+            })
+        }
+    }).catch(err=> {
+        console.log('get_clouds db returned  : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+})
 
 //----------------------------------------------------------------------------
 
