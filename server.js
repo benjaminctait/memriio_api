@@ -787,7 +787,7 @@ app.post('/get_searchwords_memid',(req,res) =>{
 
 app.post('/get_clouds',(req,res) =>{
 
-    console.log('get_clouds_userid : received query for user ' + userID);
+    console.log('get_clouds_: query eceived');
     
     db.select('*')
     .from('clouds')
