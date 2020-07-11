@@ -1032,7 +1032,6 @@ app.post('/get_all_users',(req,res) =>{
     
     db.select('*')
     .from('users')
-    .orderBy('firstname')
     .then(people=>{
         if(Array.isArray(people)){            
             console.log('get_all_users returned : '  )
