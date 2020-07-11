@@ -1033,10 +1033,9 @@ app.post('/get_all_users',(req,res) =>{
     db.select('*')
     .from('users')
     .orderBy('firstname')
-    
     .then(people=>{
-        console.log('get_all_users returned : ' + JSON.stringify(people.length) + ' users')
         if(Array.isArray(people)){            
+            console.log('get_all_users returned : ' + JSON.stringify(people.length) + ' users')
             res.json({
                 success:true,
                 data:people,
