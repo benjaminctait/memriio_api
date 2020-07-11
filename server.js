@@ -1027,6 +1027,43 @@ app.post('/get_cloud_people_userid',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
+app.post('/get_all_users',(req,res) =>{
+
+    
+    db.select('*')
+    .from('users')
+    .orderBy('firstname')
+    
+    .then(people=>{
+        console.log('get_all_users returned : ' + JSON.stringify(people.length) + ' users')
+        if(Array.isArray(people)){            
+            res.json({
+                success:true,
+                data:people,
+                error:null
+            })
+          
+        }else{ 
+            console.log('get_all_users clouds is not an array ');
+            res.json({
+                success:false,
+                data:null,
+                error:'get_all_users returned empty result'
+            })
+        }
+    }).catch(err=> {
+        console.log('get_all_users exception : ' + err)
+        res.json({
+            success:false,
+            data:null, 
+            error:err
+        })
+    })
+})
+
+
+// -------------------------------------------------------------------------------------
+
 app.post('/get_cloud_people_clouds',(req,res) =>{
 
     const cloudIDs = []
