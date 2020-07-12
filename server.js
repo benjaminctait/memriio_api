@@ -7,6 +7,7 @@ const cors = require('cors')
 const knex = require('knex')
 const aws = require('aws-sdk')
 const Jimp = require('jimp')
+const { json } = require('body-parser')
 require('dotenv').config(); // Configure dotenv to load in the .env file
 const S3_BUCKET = process.env.S3_BUCKET
 
@@ -1027,8 +1028,48 @@ app.post('/get_cloud_people_userid',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
+
+app.post('/get_user_by_email',(req,res) =>{
+
+    const {email} = req.body
+
+    console.log('get_user_by_email ' + email)
+    
+    db.select('*')
+    .from('users')
+    .where({email:email})
+    .then(people=>{
+        if(Array.isArray(people)){            
+            console.log('get_user_by_email returned : ' + JSON.stringify(people) )
+            res.json({
+                success:true,
+                data:people[0],
+                error:null
+            })
+          
+        }else{ 
+            console.log('get_user_by_email people is not an array ');
+            res.json({
+                success:false,
+                data:null,
+                error:'get_user_by_email returned empty result'
+            })
+        }
+    }).catch(err=> {
+        console.log('get_user_by_email exception : ' + err)
+        res.json({
+            success:false,
+            data:null, 
+            error:err
+        })
+    })
+})
+
+// -------------------------------------------------------------------------------------
+
 app.post('/get_all_users',(req,res) =>{
 
+    console.log('get_all_users ')
     
     db.select('*')
     .from('users')
