@@ -1039,7 +1039,7 @@ app.post('/get_user_by_email',(req,res) =>{
     .from('users')
     .where({email:email})
     .then(people=>{
-        if(Array.isArray(people)){            
+        if(people.length > 0){            
             console.log('get_user_by_email returned : ' + JSON.stringify(people) )
             res.json({
                 success:true,
@@ -1048,7 +1048,7 @@ app.post('/get_user_by_email',(req,res) =>{
             })
           
         }else{ 
-            console.log('get_user_by_email people is not an array ');
+            console.log('get_user_by_email : user with this email does not exist ');
             res.json({
                 success:false,
                 data:null,
