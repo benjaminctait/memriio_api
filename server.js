@@ -530,8 +530,8 @@ app.post('/get_cloud_memberships',(req,res) =>{
     
     console.log('get_cloud_memberships')
         
-    db.select('*').from('memberships')
-    .where({userid:userid})
+    db.select('*')
+    .from('memberships')
     .join('clouds', function() {this.on('clouds.id', '=', 'memberships.groupid')
     .then(memberships=>{
         if(Array.isArray(memberships)){
