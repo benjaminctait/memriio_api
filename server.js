@@ -532,7 +532,7 @@ app.post('/get_cloud_memberships',(req,res) =>{
         
     db.select('*')
     .from('memberships')
-    .join('clouds', function() {this.on('clouds.id', '=', 'memberships.groupid')
+    .join('clouds', function() {this.on('clouds.id', '=', 'memberships.groupid')})
     .then(memberships=>{
         if(Array.isArray(memberships)){
             console.log('get_cloud_memberships returned : ' + JSON.stringify(memberships))
@@ -560,8 +560,8 @@ app.post('/get_cloud_memberships',(req,res) =>{
             error:err
             })
     })    
-    })
 })
+
 
 //------------------------------------------------------------------------------------------------------
 
