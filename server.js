@@ -525,6 +525,45 @@ app.post('/getUser_userid',(req,res) =>{
 
 //------------------------------------------------------------------------------------------------------
 
+app.post('/get_cloud_memberships',(req,res) =>{
+
+    
+    console.log('get_cloud_memberships')
+        
+    db.select('*').from('memberships')
+    .where({userid:userid})
+    .join('clouds', function() {this.on('clouds.id', '=', 'memberships.groupid')
+    .then(memberships=>{
+        if(Array.isArray(memberships)){
+            console.log('get_cloud_memberships returned : ' + JSON.stringify(memberships))
+            
+            res.json({
+                success:true,
+                data:memberships,
+                error:null
+                })
+            
+        }else{
+            console.log('get_cloud_memberships returned : not an array' )
+            res.json({
+                success:false,
+                data:null,
+                error:'User not found'
+                })
+        }
+    })
+    .catch(err=> {
+        console.log('get_cloud_memberships returned  ' + err )
+        res.json({
+            success:false,
+            data:null,
+            error:err
+            })
+    })    
+})
+
+//------------------------------------------------------------------------------------------------------
+
 app.post('/get_memories_userid_keywords_cloudids',(req,res) =>{
 
     const {words,userid,cloudids} = req.body
