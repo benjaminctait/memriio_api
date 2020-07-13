@@ -321,6 +321,33 @@ app.post('/removeTaggedPerson',(req,res) => {
 
 // -------------------------------------------------------------------------------------------
 
+app.post('/delete_user',(req,res) => {
+    const {userid} = req.body
+
+    console.log('delete_user : userid ' + userid);
+    
+    db('users')
+        .where('userid',userid)
+        .del()
+        .then(result=> {
+            res.json({
+                success:true,
+                data:null,
+                error:null
+            })
+        })
+        .catch(err=> {
+            res.json({
+                success:false,
+                data:null,
+                error:null
+            })
+        })
+})
+
+
+// -------------------------------------------------------------------------------------------
+
 app.post('/removeCloudFromMemory',(req,res) => {
     const {memid,cloudid} = req.body
 
