@@ -425,7 +425,7 @@ app.post('/set_user_memberships',(req,res) =>{
     console.log('set_user_clouds req with body :' + userid + ' : ' + cloudids) 
     
     db.transaction(trx =>{
-        trx('memberships').where({userid:userid}).del().returning('userid')                 
+        trx('memberships').where('userid',userid).del().returning('userid')                 
         .then(response =>{
             console.log('set_user_clouds : all memberships deleted for userid : ' + response);
             {
