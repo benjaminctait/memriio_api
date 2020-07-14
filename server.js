@@ -422,35 +422,33 @@ app.post('/removeFileFromMemory_fileurl',(req,res) => {
 app.post('/set_user_memberships',(req,res) =>{
 
     const {userid,cloudids} = req.body
+    let memberships=[]
     console.log('set_user_clouds req with body :' + userid + ' : ' + JSON.stringify(cloudids)) 
-    
-    db('memberships').where('userid',userid).del()              
-    .then(response =>{
-        cloudids.map(cloudid =>{setMembership(userid,cloudid)})
-    })
-    .then(()=>{
-        res.json({
-            success:true,
-            data:null,
-            error:null
-            })
+    db.transaction(trx=>{
+        trx('memberships').where('userid',userid).del()
+        .then(response =>{
+            cloudids.map(cloudid =>{memberships.push({userid:userid,groupid:cloudid})})
+            return trx('memberships').insert(memberships)
         })
-    .catch(trx.rollback).then(err =>{
-        res.json({
-            success:false,
-            data:null,
-            error:err
+        .then(trx.commit)
+        .then((result)=>{
+            res.json({
+                success:true,
+                data:null,
+                error:null
+                })
             })
+        .catch(trx.rollback).then(err =>{
+            res.json({
+                success:false,
+                data:null,
+                error:err
+                })
+        })
     })
+              
+    
 })
-
-
-// -------------------------------------------------------------------------------------------
-
-setMembership = (userid,cloudid) =>{
-    console.log('set Membership :' + userid + ' : ' + cloudid) 
-    db('memberships').insert({userid:userid,groupid:cloudid})
-}
 
 // -------------------------------------------------------------------------------------
 
