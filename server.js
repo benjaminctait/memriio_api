@@ -429,10 +429,14 @@ app.post('/set_user_memberships',(req,res) =>{
         .then(response =>{
             console.log('set_user_clouds : all memberships deleted for userid : ' + JSON.stringify(response));
             {
-                cloudids.map(cloudid =>{
-                    console.log('set_user_clouds : membership added for userid : ' + userid + ' cloud : ' + cloudid );
-                    return trx.insert({userid:userid,groupid:cloudid}).into('memberships')
+                db.transaction(async trans =>{
+                    cloudids.map(cloudid =>{
+                        console.log('set_user_clouds : membership added for userid : ' + userid + ' cloud : ' + cloudid );
+                        return Promise.all(trans.insert({userid:userid,groupid:cloudid}).into('memberships'))
+                    })
+
                 })
+                
             }
         })
         .then(trx.commit)
