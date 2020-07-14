@@ -419,7 +419,7 @@ app.post('/removeFileFromMemory_fileurl',(req,res) => {
 
 // -------------------------------------------------------------------------------------
 
-app.post('/set_user_clouds',(req,res) =>{
+app.post('/set_user_memberships',(req,res) =>{
 
     const {userid,cloudids} = req.body
     console.log('set_user_clouds req with body :' + userid + ' : ' + cloudids) 
