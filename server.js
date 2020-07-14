@@ -422,12 +422,12 @@ app.post('/removeFileFromMemory_fileurl',(req,res) => {
 app.post('/set_user_memberships',(req,res) =>{
 
     const {userid,cloudids} = req.body
-    console.log('set_user_clouds req with body :' + userid + ' : ' + cloudids) 
+    console.log('set_user_clouds req with body :' + userid + ' : ' + JSON.stringify(cloudids)) 
     
     db.transaction(trx =>{
         trx('memberships').where('userid',userid).del().returning('userid')                 
         .then(response =>{
-            console.log('set_user_clouds : all memberships deleted for userid : ' + response);
+            console.log('set_user_clouds : all memberships deleted for userid : ' + JSON.stringify(response));
             {
                 cloudids.map(cloudid =>{
                     console.log('set_user_clouds : membership added for userid : ' + userid + ' cloud : ' + cloudid );
