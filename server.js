@@ -431,7 +431,7 @@ app.post('/set_user_memberships',(req,res) =>{
             {
                 cloudids.map(cloudid =>{
                     console.log('set_user_clouds : membership added for userid : ' + userid + ' cloud : ' + cloudid );
-                    return trx.insert({userid:userid,groupid:cloudid}).into('memberships').returning('userid')
+                    return trx.insert({userid:userid,groupid:cloudid}).into('memberships')
                 })
             }
         })
