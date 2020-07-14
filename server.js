@@ -424,40 +424,35 @@ app.post('/set_user_memberships',(req,res) =>{
     const {userid,cloudids} = req.body
     console.log('set_user_clouds req with body :' + userid + ' : ' + JSON.stringify(cloudids)) 
     
-    db.transaction(trx =>{
-        trx('memberships').where('userid',userid).del().returning('userid')                 
-        .then(response =>{
-            console.log('set_user_clouds : all memberships deleted for userid : ' + JSON.stringify(response));
-            {
-                db.transaction(async trans =>{
-                    cloudids.map(cloudid =>{
-                        console.log('set_user_clouds : membership added for userid : ' + userid + ' cloud : ' + cloudid );
-                        return Promise.all(trans.insert({userid:userid,groupid:cloudid}).into('memberships'))
-                    })
-
-                })
-                
-            }
-        })
-        .then(trx.commit)
-        .then(()=>{
-            res.json({
-                success:true,
-                data:null,
-                error:null
-                })
-            })
-        .catch(trx.rollback).then(err =>{
-            res.json({
-                success:false,
-                data:null,
-                error:err
-             })
+    db('memberships').where('userid',userid).del()              
+    .then(response =>{
+        cloudids.map(cloudid =>{setMembership(userid,cloudid)})
     })
+    .then(()=>{
+        res.json({
+            success:true,
+            data:null,
+            error:null
+            })
+        })
+    .catch(trx.rollback).then(err =>{
+        res.json({
+            success:false,
+            data:null,
+            error:err
+            })
     })
 })
 
+
 // -------------------------------------------------------------------------------------------
+
+setMembership = (userid,cloudid) =>{
+    console.log('set Membership :' + userid + ' : ' + cloudid) 
+    db('memberships').insert({userid:userid,groupid:cloudid})
+}
+
+// -------------------------------------------------------------------------------------
 
 app.post('/setHeroImage_fileurl',(req,res) => {
     const {memid,fileurl} = req.body
