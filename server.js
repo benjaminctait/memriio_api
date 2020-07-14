@@ -417,6 +417,42 @@ app.post('/removeFileFromMemory_fileurl',(req,res) => {
     })
 })
 
+// -------------------------------------------------------------------------------------
+
+app.post('/set_user_clouds',(req,res) =>{
+
+    const {userid,cloudids} = req.body
+    console.log('set_user_clouds req with body :' + userid + ' : ' + cloudids) 
+    
+    db.transaction(trx =>{
+        trx('memberships').where({userid:userid}).del().returning('userid')                 
+        .then(response =>{
+            console.log('set_user_clouds : all memberships deleted for userid : ' + response);
+            {
+                cloudids.map(cloudid =>{
+                    console.log('set_user_clouds : membership added for userid : ' + userid + ' cloud : ' + cloudid );
+                    return trx.insert({userid:userid,groupid:cloudid}).into('memberships').returning('userid')
+                })
+            }
+        })
+        .then(trx.commit)
+        .then(()=>{
+            res.json({
+                success:true,
+                data:null,
+                error:null
+                })
+            })
+        .catch(trx.rollback).then(err =>{
+            res.json({
+                success:false,
+                data:null,
+                error:err
+             })
+    })
+    })
+})
+
 // -------------------------------------------------------------------------------------------
 
 app.post('/setHeroImage_fileurl',(req,res) => {
@@ -1310,7 +1346,6 @@ app.post('/set_memory_cardtype',(req,res) =>{
         data:null,
         error:null
     })
-    
 
 })
 
