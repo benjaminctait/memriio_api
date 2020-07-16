@@ -845,9 +845,9 @@ app.post('/get_memories_userid_noclouds_unshared',(req,res) =>{
     .orderBy('memories.createdon','desc')
 
     .then(memories=>{
-        console.log('get_memories_userid_noclouds : memories : ' + memories )
+        console.log('get_memories_userid_noclouds_unshared : memories : ' + memories )
         if(Array.isArray(memories)){
-            console.log('get_memories_userid_noclouds : success = ' + true);
+            console.log('get_memories_userid_noclouds_unshared : success = ' + true);
             res.json({
                 success:true,
                 data:memories,
@@ -869,6 +869,51 @@ app.post('/get_memories_userid_noclouds_unshared',(req,res) =>{
             )
 })
 
+// ------------------------------------------------------------------
+
+app.post('/get_memories_userid_keywords_noclouds_unshared',(req,res) =>{
+
+    const {userid} = req.body
+    
+    db.select('*')
+    .from('memories')
+    .join('memfiles', function() {this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
+    .where({userid:userid})
+
+    .andWhere(function(){
+        this.whereIn('memories.memid',function(){
+            this.select('memwords.memid').from('memwords').whereIn('keyword',words)})})
+            
+    .andWhereNot('memories.memid',function(){this.select('memid').from('memgroups')
+        .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships')
+            .where({userid:userid})})})
+    
+    .orderBy('memories.createdon','desc')
+
+    .then(memories=>{
+        console.log('get_memories_userid_keywords_noclouds_unshared : memories : ' + memories )
+        if(Array.isArray(memories)){
+            console.log('get_memories_userid_keywords_noclouds_unshared : success = ' + true);
+            res.json({
+                success:true,
+                data:memories,
+                error:null
+                })
+            
+        }else{
+            res.json({
+                success:false,
+                data:null,
+                error:'No memories found'
+                })
+        }
+    }).catch(err=> res.json({
+                success:false,
+                data:null,
+                error:err
+                })
+            )
+})
 
 // search user ----------------------------------------------------------------
 
