@@ -804,9 +804,10 @@ app.post('/get_memories_userid_noclouds',(req,res) =>{
     .orderBy('memories.createdon','desc')
 
     .then(memories=>{
-        console.log('get_memories_userid_noclouds : memories : ' + memories )
+        
         if(Array.isArray(memories)){
             console.log('get_memories_userid_noclouds : success = ' + true);
+            memories.map((mem,idx) =>{console.log('idx : ' + JSON.stringify(mem))})
             res.json({
                 success:true,
                 data:memories,
@@ -884,7 +885,7 @@ app.post('/get_memories_userid_keywords_noclouds_unshared',(req,res) =>{
         this.whereIn('memories.memid',function(){
             this.select('memwords.memid').from('memwords').whereIn('keyword',words)})})
             
-    .andWhereNot('memories.memid',function(){this.select('memid').from('memgroups')
+    .orWhereNot('memories.memid',function(){this.select('memid').from('memgroups')
         .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships')
             .where({userid:userid})})})
     
@@ -924,7 +925,7 @@ app.post('/get_memories_userid_cloudids',(req,res) =>{
     db.select('*')
     .from('memories')
     .where({userid:userid})
-    .andWhere(function(){
+    .orWhere(function(){
         this.whereIn('memories.memid',function(){this.select('memid').from('memgroups')
         .whereIn('memgroups.groupid',cloudids)})})
 
