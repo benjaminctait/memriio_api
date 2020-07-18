@@ -1256,9 +1256,9 @@ app.post('/get_cloud_people_userid',(req,res) =>{
         })
     })
     .then(people=>{
-        console.log('get_cloud_people_userid returned : ' + JSON.stringify(people))
+       
         if(Array.isArray(people)){
-            console.log('get_cloud_people_userid clouds is an array :' + JSON.stringify(people));
+            console.log('get_cloud_people_userid return userids : ' + people.map(p=>{return parseInt(p.userid)}));
             res.json({
                 success:true,
                 data:people,
