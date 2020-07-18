@@ -959,7 +959,91 @@ app.post('/get_memories_userid_cloudids',(req,res) =>{
             )
 })
 
+// ----------------------------------------------------------------
+
+app.post('/get_memories_cloudids',(req,res) =>{
+
+    const {cloudids} = req.body
+    console.log('get_memories_cloudids : cloudids : ' + cloudids);
+    
+    db.select('*')
+    .from('memories')
+    .where(function(){this.whereIn('memories.memid',function(){this.select('memid').from('memgroups')
+        .whereIn('memgroups.groupid',cloudids)})})
+
+    .orderBy('memories.createdon','desc')
+    .then(memories=>{
+        
+        if(Array.isArray(memories)){
+            console.log('get_memories_cloudids : success = ' + true);
+            memories.map((mem,index) =>{console.log('returned memory : memidid ' + mem.memid + ' Title ' + mem.title )})
+            res.json({
+                success:true,
+                data:memories,
+                error:null
+                })
+            
+        }else{
+            res.json({
+                success:false,
+                data:null,
+                error:'No memories found'
+                })
+        }
+    }).catch(err=> res.json({
+                success:false,
+                data:null,
+                error:err
+                })
+            )
+})
+
 // --------------------------------------------------------------------------------
+
+app.post('/get_memories_cloudids_keywords',(req,res) =>{
+
+    const {cloudids,words} = req.body
+    console.log('get_memories_cloudids_keywords : cloudids : ' + cloudids + ' words ' + words);
+    
+    db.select('*')
+    .from('memories')
+    .where(function(){this.whereIn('memories.memid',function(){this.select('memid').from('memgroups')
+        .whereIn('memgroups.groupid',cloudids)})})
+
+    .andWhere(function(){
+        this.whereIn('memories.memid',function(){
+            this.select('memwords.memid').from('memwords').whereIn('keyword',words)})})    
+
+    .orderBy('memories.createdon','desc')
+    .then(memories=>{
+        
+        if(Array.isArray(memories)){
+            console.log('get_memories_cloudids_keywords : success = ' + true);
+            memories.map((mem,index) =>{console.log('returned memory : memidid ' + mem.memid + ' Title ' + mem.title )})
+            res.json({
+                success:true,
+                data:memories,
+                error:null
+                })
+            
+        }else{
+            res.json({
+                success:false,
+                data:null,
+                error:'No memories found'
+                })
+        }
+    }).catch(err=> res.json({
+                success:false,
+                data:null,
+                error:err
+                })
+            )
+})
+
+// --------------------------------------------------------------------------------
+
+
 
 app.post('/set_searchwords_memid',(req,res)=>{
     const {memid,searchwords } = req.body
@@ -1371,9 +1455,9 @@ app.post('/get_cloud_people_clouds',(req,res) =>{
     db.select('*').from('users').whereIn('users.userid', function(){
         this.select('userid').from('memberships').whereIn('groupid',cloudIDs)})
     .then(people=>{
-        console.log('get_cloud_people_clouds returned : ' + JSON.stringify(people))
+        
         if(Array.isArray(people)){
-            console.log('get_cloud_people_clouds clouds is an array :' + JSON.stringify(people));
+            console.log('get_cloud_people_clouds returned userids : ' + people.map(p => {return p.userid}))
             res.json({
                 success:true,
                 data:people,
