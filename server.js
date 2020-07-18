@@ -625,7 +625,7 @@ app.post('/get_memories_userid_keywords_cloudids',(req,res) =>{
        
         if(Array.isArray(memories)){
             console.log('get_memories_userid_keywords_cloudids : success = ' + true);
-            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' id' + mem.memid + ' Title ' + mem.title )})
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memid' + mem.memid + ' Title ' + mem.title )})
             
             res.json({
                 success:true,
@@ -674,12 +674,11 @@ app.post('/get_memories_keywords_user_allclouds',(req,res) =>{
                     this.select('memwords.memid').from('memwords').whereIn('keyword',words)})})
     
     .orderBy('memories.createdon','desc')
-            
 
     .then(memories=>{
-        console.log('get_memories_keywords_user_allclouds : memories : ' + memories )
         if(Array.isArray(memories)){
             console.log('get_memories_keywords_user_allclouds : success = ' + true);
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memid' + mem.memid + ' Title ' + mem.title )})
             res.json({
                 success:true,
                 data:memories,
@@ -709,7 +708,8 @@ app.post('/get_memories_keywords_user_allclouds',(req,res) =>{
 app.post('/get_memories_userid_allclouds',(req,res) =>{
 
     const {userid} = req.body
-    
+    console.log('get_memories_userid_allclouds : userid : ' + userid );
+
     db.select('*')
     .from('memories')
     .join('memfiles', function() {this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
@@ -721,9 +721,10 @@ app.post('/get_memories_userid_allclouds',(req,res) =>{
     .orderBy('memories.createdon','desc')
 
     .then(memories=>{
-        console.log('get_memories_userid_allclouds : memories : ' + memories )
+        
         if(Array.isArray(memories)){
             console.log('get_memories_userid_allclouds : success = ' + true);
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memid' + mem.memid + ' Title ' + mem.title )})
             res.json({
                 success:true,
                 data:memories,
@@ -764,9 +765,9 @@ app.post('/get_memories_keywords_user_noclouds',(req,res) =>{
     .orderBy('memories.createdon','desc')
 
     .then(memories=>{
-        console.log('get_memories_keywords_user_noclouds : memories : ' + memories )
         if(Array.isArray(memories)){
             console.log('get_memories_keywords_user_noclouds : success = ' + true);
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memid' + mem.memid + ' Title ' + mem.title )})
             res.json({
                 success:true,
                 data:memories,
@@ -796,6 +797,7 @@ app.post('/get_memories_keywords_user_noclouds',(req,res) =>{
 app.post('/get_memories_userid_noclouds',(req,res) =>{
 
     const {userid} = req.body
+    console.log('get_memories_userid_noclouds : userid : ' + userid );
     
     db.select('*')
     .from('memories')
@@ -807,7 +809,7 @@ app.post('/get_memories_userid_noclouds',(req,res) =>{
         
         if(Array.isArray(memories)){
             console.log('get_memories_userid_noclouds : success = ' + true);
-            memories.map((mem,idx) =>{console.log('idx : ' + JSON.stringify(mem))})
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memid' + mem.memid + ' Title ' + mem.title )})
             res.json({
                 success:true,
                 data:memories,
@@ -834,7 +836,8 @@ app.post('/get_memories_userid_noclouds',(req,res) =>{
 app.post('/get_memories_userid_noclouds_unshared',(req,res) =>{
 
     const {userid} = req.body
-    
+    console.log('get_memories_userid_noclouds_unshared : userid : ' + userid );
+
     db.select('*')
     .from('memories')
     .join('memfiles', function() {this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
@@ -846,9 +849,10 @@ app.post('/get_memories_userid_noclouds_unshared',(req,res) =>{
     .orderBy('memories.createdon','desc')
 
     .then(memories=>{
-        console.log('get_memories_userid_noclouds_unshared : memories : ' + memories )
+        
         if(Array.isArray(memories)){
             console.log('get_memories_userid_noclouds_unshared : success = ' + true);
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memid' + mem.memid + ' Title ' + mem.title )})
             res.json({
                 success:true,
                 data:memories,
@@ -875,26 +879,24 @@ app.post('/get_memories_userid_noclouds_unshared',(req,res) =>{
 app.post('/get_memories_userid_keywords_noclouds_unshared',(req,res) =>{
 
     const {userid} = req.body
-    
+    console.log('get_memories_userid_keywords_noclouds_unshared : userid : ' + userid );
+
     db.select('*')
     .from('memories')
     .join('memfiles', function() {this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
     .where({userid:userid})
-
+    .andWhereNot('memories.memid',function(){this.select('memid').from('memgroups')
+        .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
     .andWhere(function(){
         this.whereIn('memories.memid',function(){
             this.select('memwords.memid').from('memwords').whereIn('keyword',words)})})
-            
-    .orWhereNot('memories.memid',function(){this.select('memid').from('memgroups')
-        .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships')
-            .where({userid:userid})})})
-    
     .orderBy('memories.createdon','desc')
 
     .then(memories=>{
-        console.log('get_memories_userid_keywords_noclouds_unshared : memories : ' + memories )
+        
         if(Array.isArray(memories)){
             console.log('get_memories_userid_keywords_noclouds_unshared : success = ' + true);
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memid' + mem.memid + ' Title ' + mem.title )})
             res.json({
                 success:true,
                 data:memories,
@@ -921,6 +923,7 @@ app.post('/get_memories_userid_keywords_noclouds_unshared',(req,res) =>{
 app.post('/get_memories_userid_cloudids',(req,res) =>{
 
     const {userid,cloudids} = req.body
+    console.log('get_memories_userid_cloudids : userid : ' + userid );
     
     db.select('*')
     .from('memories')
@@ -934,7 +937,7 @@ app.post('/get_memories_userid_cloudids',(req,res) =>{
         
         if(Array.isArray(memories)){
             console.log('get_memories_userid_cloudids : success = ' + true);
-            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' id ' + mem.memid + ' Title ' + mem.title )})
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memidid ' + mem.memid + ' Title ' + mem.title )})
             res.json({
                 success:true,
                 data:memories,
