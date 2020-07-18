@@ -923,7 +923,7 @@ app.post('/get_memories_userid_keywords_noclouds_unshared',(req,res) =>{
 app.post('/get_memories_userid_cloudids',(req,res) =>{
 
     const {userid,cloudids} = req.body
-    console.log('get_memories_userid_cloudids : userid : ' + userid );
+    console.log('get_memories_userid_cloudids : userid : ' + userid + ' cloudids : ' + cloudids);
     
     db.select('*')
     .from('memories')
