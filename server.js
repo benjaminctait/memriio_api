@@ -1078,11 +1078,11 @@ app.post('/set_searchwords_memid',(req,res)=>{
             })
         .catch(trx.rollback).then(err =>{
             console.log('set_searchwords_memid : commit = ' + false);
-            console.log('set_searchwords_memid : error = ' + err);
+            console.log('set_searchwords_memid : error = ' + JSON.stringify(err));
             res.json({
                 success:false,
                 data:null,
-                error:err
+                error:JSON.stringify(err)
                 })
     })
 })
