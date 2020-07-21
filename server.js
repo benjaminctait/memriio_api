@@ -220,7 +220,7 @@ app.post('/creatememory',(req,res) => {
     db('memories')
         .returning('memid')
         .insert({
-            createdon:Date.now(),
+            createdon:new Date(),
             userid:userid,
             title:title,
             description:description,
@@ -228,14 +228,14 @@ app.post('/creatememory',(req,res) => {
             cardtype:0,
             story:story          
         }).then(result =>{
-            console.log('creatememory result' + result + ' json result ' + JSON.stringify(result));
+            console.log('creatememory result ' + result + ' json result ' + JSON.stringify(result));
             res.json( {
                 success:true,
                 data:result,
                 error:null
              }) 
         }).catch(err =>{
-            console.log('creatememory error' + err + ' json error ' + JSON.stringify(err));
+            console.log('creatememory error ' + err + ' json error ' + JSON.stringify(err));
             res.json( {
                 success:false,
                 data:null,
