@@ -215,33 +215,31 @@ app.post ('/getObject_signedurl',(req,res) =>{
 
 app.post('/creatememory',(req,res) => {
     const {userid,title,story,description,location} = req.body
+    console.log('creatememory : title ' + title + ' userid ' + userid );
     
     db('memories')
         .returning('memid')
         .insert({
-            createdon:new Date(),
+            createdon:Date.now(),
             userid:userid,
             title:title,
             description:description,
             location:location,
             cardtype:0,
-            story:story
-          
-    })
-        .then(memoryids=> {
-            if(memoryids.length > 0){
-                res.json({
-                    created:true,
-                    memid:memoryids[0]
-                })
-            }else{
-                res.json({
-                    created:false,
-                    memid:0
-                })
-            }
-        })
-        .catch(err=> json(err))
+            story:story          
+        }).then(result =>{
+            res.json( {
+                success:true,
+                data:result,
+                error:null
+             }) 
+        }).catch(err =>{
+            res.json( {
+                success:false,
+                data:null,
+                error:err
+            })}  
+        )
 })
 
 // Add file to memory ---------
@@ -265,7 +263,6 @@ app.post('/associateFile',(req,res) => {
                 data:result,
                 error:null
              }) 
-
         }).catch(
             res.json( {
                 success:true,
