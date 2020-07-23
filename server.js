@@ -265,13 +265,13 @@ app.post('/associateFile',(req,res) => {
                 data:result,
                 error:null
              }) 
-        }).catch(
+        }).catch(err =>{
             res.json( {
                 success:true,
-                data:result,
+                data:err,
                 error:null
             })
-        )
+        })
     })  
 
 // Associate key words with a memory ----------------------------------------------------------------
