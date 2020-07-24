@@ -1047,7 +1047,7 @@ app.post('/get_memories_cloudids_keywords',(req,res) =>{
 app.post('/set_searchwords_memid',(req,res)=>{
     const {memid,searchwords } = req.body
     addarray = []
-    console.log('set_searchwords_memid for memid ' + memid + ' searchWord count : ' + searchwords.length));
+    console.log('set_searchwords_memid for memid ' + memid + ' searchWord count : ' + searchwords.length);
     
     db.transaction(trx =>{
         trx('memwords').where({memid:memid}).del()
