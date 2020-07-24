@@ -1047,7 +1047,7 @@ app.post('/get_memories_cloudids_keywords',(req,res) =>{
 app.post('/set_searchwords_memid',(req,res)=>{
     const {memid,searchwords } = req.body
     addarray = []
-    console.log('set_searchwords_memid : memid ' + memid + ' words ' + JSON.stringify(searchwords));
+    console.log('set_searchwords_memid for memid ' + memid + ' searchWord count : ' + searchwords.length));
     
     db.transaction(trx =>{
         trx('memwords').where({memid:memid}).del()
@@ -1563,12 +1563,14 @@ deleteS3MemoryFiles = (memid) => {
                 }
             }
     
-            console.log('deleteS3MemoryFiles : deleteparam : ' + JSON.stringify(deleteParam))
             s3.deleteObjects(deleteParam, function(err, data){
                 if (err) {
                     console.log('deleteS3MemoryFiles : error deleting from S3 : ' + err)
                 }else{
-                    console.log('deleteS3MemoryFiles : delete from S3 successfull', JSON.stringify(objects))
+                    console.log('deleteS3MemoryFiles : delete from S3 successfull')
+                    deleteParam.Delete.Objects.map(obj => {
+                        console.log('s3-delete : ' + obj.Key);
+                    })
                 }
             })
         }else{
