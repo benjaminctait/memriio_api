@@ -1538,9 +1538,9 @@ deleteS3MemoryFiles = (memid) => {
     let objects = []
     db.select('*')
     .from('memfiles')
-    .where({memid:memoryid})
+    .where({memid:memid})
     .then(memoryFiles=>{
-        console.log('deleteS3MemoryFiles : select memfiles for memid: ' + memoryid + ' returned : ' + memoryFiles.length + ' memfiles')
+        console.log('deleteS3MemoryFiles : select memfiles for memid: ' + memid + ' returned : ' + memoryFiles.length + ' memfiles')
         
         if(Array.isArray(memoryFiles) && memoryFiles.length){
     
