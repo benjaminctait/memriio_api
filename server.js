@@ -1487,79 +1487,95 @@ app.post('/get_cloud_people_clouds',(req,res) =>{
 app.post('/delete_memory',(req,res) =>{
 
 const {memoryid} = req.body
-const s3 = new aws.S3();
+console.log('delete_memory called for memid : ' + memoryid);
 
-let objects = []
-db.select('fileurl')
-.from('memfiles')
-.where({memid:memoryid})
-.then(memoryFiles=>{
-    console.log('db returned : ' + JSON.stringify(memoryFiles))
-    
-    if(Array.isArray(memoryFiles)){
-        memoryFiles.map(furl => {
-            strarray = furl.fileurl.split('/')            
-            keyname = strarray[strarray.length-1]
-            console.log('keyname ' + keyname);
-            
-            objects.push({Key:keyname})
-            })
-            console.log('objects : ' + objects);
-            
-    }
-    var deleteParam = {
-        Bucket: S3_BUCKET,
-        Delete: {
-            Objects:objects
-        }
-        
-    }
+deleteS3MemoryFiles(memoryid)
 
-    console.log('deleteparam : ' + JSON.stringify(deleteParam))
-    
-    s3.deleteObjects(deleteParam, function(err, data) {
-        if (err) {
-            console.log(err,)
-        }else{
-            console.log('delete from S3 successfull', JSON.stringify(objects))
-            db.transaction(trx =>{
-                trx('memfiles').where('memid',memoryid).del().returning('memid')                 
-                .then(response =>{
-                    console.log('delete_memory : delete memfiles : ' + memoryid);
-                    return trx('memgroups').where('memid',memoryid).del().returning('memid')
-                })
-                .then(response =>{
-                    console.log('delete_memory : delete mempeople : ' + memoryid);
-                    return trx('mempeople').where('memid',memoryid).del().returning('memid')
-                })
-                .then(response =>{
-                    console.log('delete_memory : delete memwords : ' + memoryid);
-                    return trx('memwords').where('memid',memoryid).del().returning('memid')
-                })
-                .then(response =>{
-                    console.log('delete_memory : delete memories : ' + memoryid);
-                    return trx('memories').where('memid',memoryid).del().returning('memid')
-                })
-                .then(trx.commit).then(()=>{
-                    res.json({
-                        success:true,
-                        data:null,
-                        error:null
-                        })
-                    })
-                
-                .catch(trx.rollback).then(err =>{
-                    res.json({
-                        success:false,
-                        data:null,
-                        error:err
-                        })
-                })
+db.transaction(trx =>{
+    trx('memfiles').where('memid',memoryid).del().returning('memid')                 
+    .then(response =>{
+        console.log('delete_memory : delete memfiles : ' + memoryid);
+        return trx('memgroups').where('memid',memoryid).del().returning('memid')
+    })
+    .then(response =>{
+        console.log('delete_memory : delete mempeople : ' + memoryid);
+        return trx('mempeople').where('memid',memoryid).del().returning('memid')
+    })
+    .then(response =>{
+        console.log('delete_memory : delete memwords : ' + memoryid);
+        return trx('memwords').where('memid',memoryid).del().returning('memid')
+    })
+    .then(response =>{
+        console.log('delete_memory : delete memories : ' + memoryid);
+        return trx('memories').where('memid',memoryid).del().returning('memid')
+    })
+    .then(trx.commit).then(()=>{
+        res.json({
+            success:true,
+            data:null,
+            error:null
             })
-        } 
+        })
+    
+    .catch(trx.rollback).then(err =>{
+        res.json({
+            success:false,
+            data:null,
+            error:err
+            })
     })
 })
+     
+    
 })
+
+// -------------------------------------------------------------------------------------
+
+deleteS3MemoryFiles = (memid) => {
+
+    console.log('deleteS3MemoryFiles for memid : ' + memid);
+    const s3 = new aws.S3();
+    let objects = []
+    db.select('*')
+    .from('memfiles')
+    .where({memid:memoryid})
+    .then(memoryFiles=>{
+        console.log('deleteS3MemoryFiles : select memfiles for memid: ' + memoryid + ' returned : ' + memoryFiles.length + ' memfiles')
+        
+        if(Array.isArray(memoryFiles) && memoryFiles.length){
+    
+            memoryFiles.map(file => {
+                
+                strarray = file.fileurl.split('/')            
+                keyname = strarray[strarray.length-1]
+                objects.push({Key:keyname})
+
+                strarray = file.thumburl.split('/')            
+                keyname = strarray[strarray.length-1]
+                objects.push({Key:keyname})
+
+                })
+        
+            var deleteParam = {
+                Bucket: S3_BUCKET,
+                Delete: {
+                    Objects:objects
+                }
+            }
+    
+            console.log('deleteS3MemoryFiles : deleteparam : ' + JSON.stringify(deleteParam))
+            s3.deleteObjects(deleteParam, function(err, data){
+                if (err) {
+                    console.log('deleteS3MemoryFiles : error deleting from S3 : ' + err)
+                }else{
+                    console.log('deleteS3MemoryFiles : delete from S3 successfull', JSON.stringify(objects))
+                }
+            })
+        }else{
+            console.log('deleteS3MemoryFiles : ERROR : memFiles returned empty for memid : ' + memid );
+        }
+    })    
+}
 
 // -------------------------------------------------------------------------------------
 
