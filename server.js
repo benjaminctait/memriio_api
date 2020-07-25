@@ -514,9 +514,18 @@ app.post('/associateGroup',(req,res) => {
             groupid:groupid
     })
         .then(result=> {
-            res.json(result[0]); // returns the memory id if successfull
+            res.json({
+                success:true,
+                data:result[0],
+                error:null
+                })
         })
-        .catch(err=> res.status(400).json('unable to associate'))
+        .catch(err=> res.json({
+            success:true,
+            data:result[0],
+            error:null
+            })
+        )
 })
 
 // profile/id ----------------------------------------------------------------
