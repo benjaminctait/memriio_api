@@ -497,9 +497,18 @@ app.post('/associatePerson',(req,res) => {
             userid:userid
     })
         .then(result=> {
-            res.json(result[0]); // returns the memory id if successfull
+            res.json({
+                success:true,
+                data:result[0],
+                error:null
+                }) // returns the memory id if successfull
         })
-        .catch(err=> res.status(400).json('unable to associate'))
+        .catch(err=> res.json({
+            success:false,
+            data:null,
+            error:err
+            })
+        )
 })
 
 // Associate a groupID with a memory ----------------------------------------------------------------
