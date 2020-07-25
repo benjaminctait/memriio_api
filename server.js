@@ -702,6 +702,55 @@ app.post('/get_memories_keywords_user_allclouds',(req,res) =>{
     })
 })
 
+//------------------------------------------------------------------------------------------------------
+
+app.post('/get_memories_keywords_clouds',(req,res) =>{
+
+    const {words,cloudids} = req.body
+    console.log('get_memories_keywords_clouds : cloudids : ' + cloudids + ' words ' + words);
+    
+    
+    db.select('*')
+    .from('memories')
+    .join('memfiles', function() {this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
+    .where(function(){
+        this.whereIn('memories.memid',function(){
+            this.select('memwords.memid').from('memwords').whereIn('keyword',words)})})
+
+    .andWhere(function(){
+        this.whereIn('memories.memid',function(){this.select('memid').from('memgroups')
+        .whereIn('memgroups.groupid',cloudids)})})
+    
+    .orderBy('memories.createdon','desc')
+
+    .then(memories=>{
+        if(Array.isArray(memories)){
+            console.log('get_memories_keywords_clouds : success = ' + true);
+            memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memid' + mem.memid + ' Title ' + mem.title )})
+            res.json({
+                success:true,
+                data:memories,
+                error:null
+                })
+            
+        }else{
+            res.json({
+                success:false,
+                data:null,
+                error:'No memories found'
+                })
+        }
+    })
+    .catch(err=> {
+        console.log('get_memories_keywords_clouds : err : ' + err) 
+        res.json({
+            success:false,
+            data:null,
+            error:err
+            })  
+    })
+})
+
 // search user ----------------------------------------------------------------
 
 app.post('/get_memories_userid_allclouds',(req,res) =>{
