@@ -506,14 +506,15 @@ app.post('/associatePerson',(req,res) => {
 
 app.post('/associateGroup',(req,res) => {
     const {memid,groupid} = req.body
-    
+    console.log('associateCloud : memid ' + memid + ' : cloudid ' + groupid);
+
     db('memgroups')
         .returning('memid')
         .insert({
             memid:memid,
             groupid:groupid
     })
-        .then(result=> {
+        .then(result=> {            
             res.json({
                 success:true,
                 data:result[0],
