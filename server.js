@@ -23,7 +23,9 @@ aws.config.update({
     region: process.env.REGION,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    signatureVersion: 'v4'
+    transcodePipelineId : process.env.TRANSCODE_PIPE,
+    signatureVersion: 'v4',
+    
 })
 tinify.key = process.env.TINIFY_API_KEY
 
@@ -41,7 +43,77 @@ app.get('/',(req,res) =>{
     res.json('memriio server is live : version 5')
 })
 
-// signin ----------------------
+// -----------------------------------------------------------------------
+
+app.post('/transcode_mp4_HLS',(req,res) => {
+    const {mp4filekey} = req.body
+
+    let params = {
+        PipelineId: aws.config.transcodePipelineId,
+        Input: {
+            Key: mp4filekey,
+            AspectRatio: 'auto',
+            FrameRate: 'auto',
+            Resolution: 'auto',
+            Container: 'auto',
+            Interlaced: 'auto'
+        },
+        OutputKeyPrefix:  "transcoded/",
+        Outputs: [
+            {
+                Key: mp4filekey + '_hls2000',
+                PresetId: "1351620000001-200015",
+                SegmentDuration: "10"
+            },
+            {
+                Key: mp4filekey + 'hls1500',
+                PresetId: "1351620000001-200025",
+                SegmentDuration: "10"
+            }
+            ],
+        Playlists: [
+            {
+                Format: 'HLSv3',
+                Name: mp4filekey + 'hls',
+                OutputKeys: [
+                    mp4filekey + '_hls2000',
+                    mp4filekey + 'hls1500'
+                ]
+            },
+        ]
+    }
+    
+    createJob(params).then(result =>{
+        console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result.job.id));
+        res.json( {
+            success:true,
+            data:result.job.id,
+            error:null
+         }) 
+    }).catch(err =>{
+        console.log('transcode_mp4_HLS error ' + JSON.stringify(err));
+        res.json( {
+            success:false,
+            data:null,
+            error:err
+        })}  
+    )
+    
+})
+    
+async function createJob(params) {
+    return new Promise((resolve, reject) => {
+        let transcoder = new aws.ElasticTranscoder();
+        transcoder.createJob(params, (err, data) => {
+            if(err) return reject("err: " + err)
+            if(data) return resolve(data)
+        })
+    })
+}
+
+
+
+// signin ---------------------------------------------------------------
 
 app.post('/signin',(req,res) => {
     
