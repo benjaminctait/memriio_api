@@ -1889,12 +1889,12 @@ app.post('/set_memory_clouds',(req,res) =>{
 
 
 
-// Listen ----------------------------------------------------------------
-
-// -----------------------------------------------------------------------
+// -------------------------------------------------------------------------------
 
 app.post('/transcode_mp4_HLS',(req,res) => {
     const {mp4filekey} = req.body
+
+    let fname = mp4filekey.split('.')[0]
     
     let params = {
         PipelineId: process.env.TRANSCODE_PIPE,
@@ -1909,12 +1909,12 @@ app.post('/transcode_mp4_HLS',(req,res) => {
         OutputKeyPrefix:  "transcoded/",
         Outputs: [
             {
-                Key: mp4filekey + '_hls2000',
+                Key: fname + '_hls2000',
                 PresetId: "1351620000001-200015",
                 SegmentDuration: "10"
             },
             {
-                Key: mp4filekey + 'hls1500',
+                Key: fname + 'hls1500',
                 PresetId: "1351620000001-200025",
                 SegmentDuration: "10"
             }
@@ -1922,15 +1922,15 @@ app.post('/transcode_mp4_HLS',(req,res) => {
         Playlists: [
             {
                 Format: 'HLSv3',
-                Name: mp4filekey + 'hls',
+                Name: fname + 'hls',
                 OutputKeys: [
-                    mp4filekey + '_hls2000',
-                    mp4filekey + 'hls1500'
+                    fname + '_hls2000',
+                    fname + 'hls1500'
                 ]
             },
         ]
     }
-    
+
     createJob(params).then(result =>{
         console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result.job.id));
         res.json( {
@@ -1948,7 +1948,9 @@ app.post('/transcode_mp4_HLS',(req,res) => {
     )
     
 })
-    
+
+// -------------------------------------------------------------------------------
+
 async function createJob(params) {
     return new Promise((resolve, reject) => {
         let transcoder = new aws.ElasticTranscoder();
@@ -1959,6 +1961,7 @@ async function createJob(params) {
     })
 }
 
+// -------------------------------------------------------------------------------
 
 app.listen(process.env.PORT || 3000,()=> {
     console.log('app running on port ${process.env.PORT}');
