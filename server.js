@@ -1931,7 +1931,9 @@ app.post('/transcode_mp4_HLS',(req,res) => {
         ]
     }
 
-    createJob(params).then(result =>{
+    createJob(params)
+
+    .then(result =>{
         console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result.job.id));
         res.json( {
             success:true,
@@ -1955,12 +1957,14 @@ async function createJob(params) {
     return new Promise((resolve, reject) => {
         let transcoder = new aws.ElasticTranscoder();
         transcoder.createJob(params, (err, data) => {
-            console.log('createJob data : '  + JSON.stringify(data));
-            console.log('createJob err  : '  + JSON.stringify(err));
-
-            if(data) return resolve(data)
-            if(err) return reject("err: " + err)
             
+            if(err){
+                console.log('createJob err  : '  + JSON.stringify(err));
+                reject("err: " + err)
+            }else{
+                console.log('createJob job : '  + data.job.id);
+                resolve(data)
+            }
         })
     })
 }
