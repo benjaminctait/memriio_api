@@ -1934,10 +1934,10 @@ app.post('/transcode_mp4_HLS',(req,res) => {
     createJob(params)
 
     .then(result =>{
-        console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result.job.id));
+        console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result));
         res.json( {
             success:true,
-            data:result.job.id,
+            data:result,
             error:null
          }) 
     }).catch(err =>{
@@ -1962,7 +1962,7 @@ async function createJob(params) {
                 console.log('createJob err  : '  + JSON.stringify(err));
                 reject("err: " + err)
             }else{
-                console.log('createJob job : '  + data.job.id);
+                console.log('createJob job : '  + data);
                 resolve(data)
             }
         })
