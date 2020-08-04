@@ -1914,7 +1914,7 @@ app.post('/transcode_mp4_HLS',(req,res) => {
                 SegmentDuration: "10"
             },
             {
-                Key: fname + 'hls1500',
+                Key: fname + '_hls1500',
                 PresetId: "1351620000001-200025",
                 SegmentDuration: "10"
             }
@@ -1925,7 +1925,7 @@ app.post('/transcode_mp4_HLS',(req,res) => {
                 Name: fname + 'hls',
                 OutputKeys: [
                     fname + '_hls2000',
-                    fname + 'hls1500'
+                    fname + '_hls1500'
                 ]
             },
         ]
@@ -1955,8 +1955,12 @@ async function createJob(params) {
     return new Promise((resolve, reject) => {
         let transcoder = new aws.ElasticTranscoder();
         transcoder.createJob(params, (err, data) => {
-            if(err) return reject("err: " + err)
+            console.log('createJob data : '  + JSON.stringify(data));
+            console.log('createJob err  : '  + JSON.stringify(err));
+
             if(data) return resolve(data)
+            if(err) return reject("err: " + err)
+            
         })
     })
 }
