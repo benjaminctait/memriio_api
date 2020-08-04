@@ -20,6 +20,7 @@ const db = knex({
 });
 
 aws.config.update({
+    bucket:process.env.S3_BUCKET,
     region: process.env.REGION,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -47,7 +48,13 @@ app.get('/',(req,res) =>{
 
 app.post('/transcode_mp4_HLS',(req,res) => {
     const {mp4filekey} = req.body
-    console.log('transcode_mp4_HLS pipeid : ' + aws.config.transcodePipelineId);
+    console.log('transcode test -------------------');
+    console.log('aws.config ');
+    console.log(JSON.stringify(aws.config));
+    console.log('    TRANSCODE_PIPE    ');
+    console.log(process.env.TRANSCODE_PIPE);
+
+    
 
     let params = {
         PipelineId: aws.config.transcodePipelineId,
