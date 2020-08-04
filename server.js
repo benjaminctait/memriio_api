@@ -47,6 +47,7 @@ app.get('/',(req,res) =>{
 
 app.post('/transcode_mp4_HLS',(req,res) => {
     const {mp4filekey} = req.body
+    console.log('transcode_mp4_HLS pipeid : ' + aws.config.transcodePipelineId);
 
     let params = {
         PipelineId: aws.config.transcodePipelineId,
