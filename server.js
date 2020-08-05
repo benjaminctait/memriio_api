@@ -1892,7 +1892,7 @@ app.post('/set_memory_clouds',(req,res) =>{
 // -------------------------------------------------------------------------------
 
 app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
-    const {mp4filekey} = req.body
+    const {mp4filekey , outputPrefix } = req.body
 
     let fname = mp4filekey.split('.')[0]
     
@@ -1906,7 +1906,7 @@ app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
             Container: 'auto',
             Interlaced: 'auto'
         },
-        OutputKeyPrefix: fname + '/',
+        OutputKeyPrefix: outputPrefix + '/',
         Outputs: [
             {
                 Key: 'hls_2000',
@@ -1932,7 +1932,6 @@ app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
     }
 
     createJob(params)
-
     .then(result =>{
         console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result.Job.Id));
         res.json( {
