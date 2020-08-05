@@ -1906,7 +1906,7 @@ app.post('/transcode_mp4_HLS',(req,res) => {
             Container: 'auto',
             Interlaced: 'auto'
         },
-        OutputKeyPrefix:  '',
+        
         Outputs: [
             {
                 Key: fname + '_hls2000',
