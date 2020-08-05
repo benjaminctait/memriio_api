@@ -1891,7 +1891,7 @@ app.post('/set_memory_clouds',(req,res) =>{
 
 // -------------------------------------------------------------------------------
 
-app.post('/transcode_mp4_HLS',(req,res) => {
+app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
     const {mp4filekey} = req.body
 
     let fname = mp4filekey.split('.')[0]
@@ -1906,15 +1906,15 @@ app.post('/transcode_mp4_HLS',(req,res) => {
             Container: 'auto',
             Interlaced: 'auto'
         },
-        
+        OutputKeyPrefix: fname + '/',
         Outputs: [
             {
-                Key: fname + '_hls2000',
+                Key: 'hls_2000',
                 PresetId: "1351620000001-200015",
                 SegmentDuration: "10"
             },
             {
-                Key: fname + '_hls1500',
+                Key: 'hls_1500',
                 PresetId: "1351620000001-200025",
                 SegmentDuration: "10"
             }
@@ -1922,10 +1922,10 @@ app.post('/transcode_mp4_HLS',(req,res) => {
         Playlists: [
             {
                 Format: 'HLSv3',
-                Name: fname + 'hls',
+                Name: 'hls_Master',
                 OutputKeys: [
-                    fname + '_hls2000',
-                    fname + '_hls1500'
+                    'hls_2000',
+                    'hls_1500'
                 ]
             },
         ]
