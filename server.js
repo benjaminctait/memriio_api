@@ -1922,7 +1922,7 @@ app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
         Playlists: [
             {
                 Format: 'HLSv3',
-                Name: 'hls_Master',
+                Name: 'hls_master',
                 OutputKeys: [
                     'hls_2000',
                     'hls_1500'
@@ -1934,10 +1934,10 @@ app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
     createJob(params)
 
     .then(result =>{
-        console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result));
+        console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result.Job.Id));
         res.json( {
             success:true,
-            data:result,
+            data:fname + '/' + 'hls_master.m3u8',
             error:null
          }) 
     }).catch(err =>{
