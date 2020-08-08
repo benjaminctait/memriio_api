@@ -1138,7 +1138,7 @@ app.post('/set_searchwords_memid',(req,res)=>{
            return trx('memwords').insert(addarray)
         })
         .then(trx.commit)
-        .then(()=>{
+        .then(response =>{
             console.log('set_searchwords_memid : commit = ' + true);
             res.json({
                 success:true,
@@ -1933,10 +1933,11 @@ app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
 
     createJob(params)
     .then(result =>{
-        console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result.Job.Id));
+        console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result));
+        let fullkey = fname + '/' + 'hls_master.m3u8'
         res.json( {
             success:true,
-            data:fname + '/' + 'hls_master.m3u8',
+            data: `https://${S3_BUCKET}.s3.amazonaws.com/${fullkey}` ,
             error:null
          }) 
     }).catch(err =>{
