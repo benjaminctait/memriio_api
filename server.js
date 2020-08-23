@@ -528,14 +528,14 @@ app.post('/associateGroup',(req,res) => {
         .then(result=> {            
             res.json({
                 success:true,
-                data:result[0],
+                data:result,
                 error:null
                 })
         })
         .catch(err=> res.json({
             success:true,
-            data:result[0],
-            error:null
+            data:null,
+            error:err
             })
         )
 })
@@ -1934,7 +1934,7 @@ app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
     createJob(params)
     .then(result =>{
         console.log('transcode_mp4_HLS success : job id -> ' + JSON.stringify(result));
-        let fullkey = fname + '/' + 'hls_master.m3u8'
+        let fullkey = outputPrefix + '/' + 'hls_master.m3u8'
         res.json( {
             success:true,
             data: `https://${S3_BUCKET}.s3.amazonaws.com/${fullkey}` ,
