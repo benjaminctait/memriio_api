@@ -630,13 +630,13 @@ app.post('/get_memories_userid_keywords_cloudids',(req,res) =>{
     .where({userid:userid})
     .andWhere(function(){
         this.whereIn('memories.memid',function(){
-            this.select('memwords.memid').from('memwords').whereIn('LOWER("keyword")',words)})})
+            this.select('memwords.memid').from('memwords').whereIn(knex.raw('LOWER("keyword")') ,words)})})
 
     .orWhereIn('memories.memid',function(){this.select('memgroups.memid').from('memgroups')
             .whereIn('memgroups.groupid',cloudids)})
             .andWhere(function(){
                 this.whereIn('memories.memid',function(){
-                    this.select('memwords.memid').from('memwords').whereIn('LOWER("keyword")',words)})})
+                    this.select('memwords.memid').from('memwords').whereIn(knex.raw('LOWER("keyword")'),words)})})
     
     .orderBy('memories.createdon','desc')
             
@@ -685,13 +685,13 @@ app.post('/get_memories_keywords_user_allclouds',(req,res) =>{
     .where({userid:userid})
     .andWhere(function(){
         this.whereIn('memories.memid',function(){
-            this.select('memwords.memid').from('memwords').whereIn('LOWER("keyword")',words)})})
+            this.select('memwords.memid').from('memwords').whereIn(knex.raw('LOWER("keyword")'),words)})})
 
     .orWhereIn('memories.memid',function(){this.select('memgroups.memid').from('memgroups')
             .whereIn('memgroups.groupid',function(){this.select('memberships.groupid').from('memberships').where({userid:userid})})})
             .andWhere(function(){
                 this.whereIn('memories.memid',function(){
-                    this.select('memwords.memid').from('memwords').whereIn('LOWER("keyword")',words)})})
+                    this.select('memwords.memid').from('memwords').whereIn(knex.raw('LOWER("keyword")'),words)})})
     
     .orderBy('memories.createdon','desc')
 
@@ -736,7 +736,7 @@ app.post('/get_memories_keywords_clouds',(req,res) =>{
     .join('memfiles', function() {this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
     .where(function(){
         this.whereIn('memories.memid',function(){
-            this.select('memwords.memid').from('memwords').whereIn('LOWER("keyword")',words)})})
+            this.select('memwords.memid').from('memwords').whereIn(knex.raw('LOWER("keyword")'),words)})})
 
     .andWhere(function(){
         this.whereIn('memories.memid',function(){this.select('memid').from('memgroups')
@@ -829,7 +829,7 @@ app.post('/get_memories_keywords_user_noclouds',(req,res) =>{
     .where({userid:userid})
     .andWhere(function(){
         this.whereIn('memories.memid',function(){
-            this.select('memwords.memid').from('memwords').whereIn('LOWER("keyword")',words)})})
+            this.select('memwords.memid').from('memwords').whereIn(knex.raw('LOWER("keyword")'),words)})})
     
     .orderBy('memories.createdon','desc')
 
@@ -958,7 +958,7 @@ app.post('/get_memories_userid_keywords_noclouds_unshared',(req,res) =>{
         .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships').where({userid:userid})})})
     .andWhere(function(){
         this.whereIn('memories.memid',function(){
-            this.select('memwords.memid').from('memwords').whereIn('LOWER("keyword")',words)})})
+            this.select('memwords.memid').from('memwords').whereIn(knex.raw('LOWER("keyword")'),words)})})
     .orderBy('memories.createdon','desc')
 
     .then(memories=>{
@@ -1081,7 +1081,7 @@ app.post('/get_memories_cloudids_keywords',(req,res) =>{
 
     .andWhere(function(){
         this.whereIn('memories.memid',function(){
-            this.select('memwords.memid').from('memwords').whereIn('LOWER("keyword")',words)})})    
+            this.select('memwords.memid').from('memwords').whereIn(knex.raw('LOWER("keyword")'),words)})})    
 
     .orderBy('memories.createdon','desc')
     .then(memories=>{
