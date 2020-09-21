@@ -1439,7 +1439,7 @@ app.post('/get_cloud_people_userid',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
-app.post ('/set_webClouds_userid'),(req,res) =>{
+app.post ('/set_webClouds_userid',(req,res) =>{
 
     const {userid,webclouds} = req.body
 
@@ -1463,12 +1463,11 @@ app.post ('/set_webClouds_userid'),(req,res) =>{
         error:null
     })
 
-
-}
+})
 
 // -------------------------------------------------------------------------------------
 
-app.post ('/set_mobileClouds_userid'),(req,res) =>{
+app.post ('/set_mobileClouds_userid',(req,res) =>{
 
     const {userid,mobileclouds} = req.body
 
@@ -1492,8 +1491,7 @@ app.post ('/set_mobileClouds_userid'),(req,res) =>{
         error:null
     })
 
-
-}
+})
 // -------------------------------------------------------------------------------------
 
 app.post('/get_user_by_email',(req,res) =>{
