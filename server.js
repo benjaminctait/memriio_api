@@ -624,7 +624,6 @@ app.post('/get_memories_userid_keywords_cloudids',(req,res) =>{
     const {words,userid,cloudids} = req.body
     console.log('get_memories_userid_keywords_cloudids : userid : ' + userid + ' words ' + words + ' cloud ids ' + cloudids);
     
-    
     db.select('*')                
     .from('memories')
     .where({userid:userid})
@@ -1440,6 +1439,62 @@ app.post('/get_cloud_people_userid',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
+app.post ('/set_webClouds_userid'),(req,res) =>{
+
+    const {userid,webclouds} = req.body
+
+    console.log('set_webClouds_userid ' + userid + ' webclouds ' + webclouds)
+
+    db('users')
+    .where({userid:userid})
+    .update({webclouds:webclouds})
+    .catch(err=> {
+        console.log('set_webClouds_userid db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('set_webClouds_userid db update success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null
+    })
+
+
+}
+
+// -------------------------------------------------------------------------------------
+
+app.post ('/set_mobileClouds_userid'),(req,res) =>{
+
+    const {userid,mobileclouds} = req.body
+
+    console.log('set_mobileClouds_userid ' + userid + ' webclouds ' + mobileclouds)
+
+    db('users')
+    .where({userid:userid})
+    .update({mobileclouds:mobileclouds})
+    .catch(err=> {
+        console.log('set_mobileClouds_userid db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('set_mobileClouds_userid db update success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null
+    })
+
+
+}
+// -------------------------------------------------------------------------------------
 
 app.post('/get_user_by_email',(req,res) =>{
 
