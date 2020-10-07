@@ -1781,6 +1781,35 @@ app.post('/set_memory_title',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
+app.post('/register_points',(req,res) =>{
+
+    const {postedby,sharedwith,memid,description,points} = req.body
+    console.log('register_points req with body : postedby - ' + postedby  + ' : memid - ' + memid + ' : description - ' + description) 
+    
+    db.insert( { postedby:postedby,
+                 sharedwith:sharedwith,
+                 memid:memid,
+                 description:description,
+                 points:points   
+                }).into('points').returning('eventid')
+    .catch(err=> {
+        console.log('register_points error : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('register_points success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null})
+})
+
+// -------------------------------------------------------------------------------------
+
+
 app.post('/set_memory_tagged_people',(req,res) =>{
 
     const {memoryid,taggedPeople} = req.body
