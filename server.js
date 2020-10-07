@@ -735,7 +735,7 @@ app.post('/get_memories_keywords_clouds',(req,res) =>{
     .join('memfiles', function() {this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
     .where(function(){
         this.whereIn('memories.memid',function(){
-            this.select('memwords.memid').from('memwords').whereIn(knex.raw('LOWER("keyword")'),words)})})
+            this.select('memwords.memid').from('memwords').whereIn(db.raw('LOWER("keyword")'),words)})})
 
     .andWhere(function(){
         this.whereIn('memories.memid',function(){this.select('memid').from('memgroups')
