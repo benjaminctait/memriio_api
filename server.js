@@ -249,7 +249,7 @@ app.post('/creatememory',(req,res) => {
 // Add file to memory ---------
 
 app.post('/associateFile',(req,res) => {
-    const{memid,fileurl,fileext,thumburl,thumbext,ishero} = req.body;
+    const{memid,fileurl,fileext,thumburl,thumbext,ishero, displayurl=''} = req.body;
     
 
     db('memfiles').returning('*')
@@ -259,7 +259,8 @@ app.post('/associateFile',(req,res) => {
             fileext:fileext,
             thumburl:thumburl,
             thumbext:thumbext,
-            ishero:ishero
+            ishero:ishero,
+            displayurl
         })
         .then(result =>{
             res.json( {
