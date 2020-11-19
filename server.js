@@ -1994,12 +1994,22 @@ app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
             {
                 Key: 'hls_2000',
                 PresetId: "1351620000001-200015",
-                SegmentDuration: "10"
+                SegmentDuration: "5"
             },
             {
                 Key: 'hls_1500',
                 PresetId: "1351620000001-200025",
-                SegmentDuration: "10"
+                SegmentDuration: "5"
+            },
+            {
+                Key: 'hls_1000',
+                PresetId: "1351620000001-200035",
+                SegmentDuration: "5"
+            },
+            {
+                Key: 'hls_600',
+                PresetId: "1351620000001-200045",
+                SegmentDuration: "5"
             }
             ],
         Playlists: [
@@ -2008,7 +2018,9 @@ app.post('/transcode_mp4_HLS_Playlist',(req,res) => {
                 Name: 'hls_master',
                 OutputKeys: [
                     'hls_2000',
-                    'hls_1500'
+                    'hls_1500',
+                    'hls_1000',
+                    'hls_600'
                 ]
             },
         ]
