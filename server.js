@@ -1729,6 +1729,31 @@ app.post('/set_memory_cardtype',(req,res) =>{
 
 })
 
+// -------------------------------------------------------------------------------------
+
+app.post('/set_memory_editcount',(req,res) =>{
+    const {memoryid,editcount} = req.body
+    console.log('set_memory_editcount req with body :' + memoryid + ' : ' + editcount) 
+    
+    db('memories')
+    .where({memid:memoryid})
+    .update({editcount:editcount})
+    .catch(err=> {
+        console.log('set_memory_editcount db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('set_memory_editcount db update success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null
+    })
+
+})
 
 // -------------------------------------------------------------------------------------
 
@@ -1784,11 +1809,10 @@ app.post('/set_memory_title',(req,res) =>{
 
 app.post('/register_points',(req,res) =>{
 
-    const {postedby,sharedwith,memid,description,points} = req.body
-    console.log('register_points req with body : postedby - ' + postedby  + ' : memid - ' + memid + ' : description - ' + description) 
+    const {userid,memid,description,points} = req.body
+    console.log('register_points req with body : userid - ' + userid  + ' : memid - ' + memid + ' : description - ' + description + ' : points - ' + points) 
     
-    db.insert( { postedby:postedby,
-                 sharedwith:sharedwith,
+    db.insert( { userid :userid,
                  memid:memid,
                  description:description,
                  points:points   
