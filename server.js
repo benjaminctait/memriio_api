@@ -1809,13 +1809,18 @@ app.post('/set_memory_title',(req,res) =>{
 
 app.post('/register_points',(req,res) =>{
 
-    const {userid,memid,description,points} = req.body
-    console.log('register_points req with body : userid - ' + userid  + ' : memid - ' + memid + ' : description - ' + description + ' : points - ' + points) 
+    const {userid,memid,description,points,cloudid} = req.body
+    console.log('register_points req with body : userid - ' + userid  
+        + ' : memid - ' + memid 
+        + ' : description - ' + description 
+        + ' : points - ' + points
+        + ' : cloud - ' + cloudid) 
     
     db.insert( { userid :userid,
                  memid:memid,
                  description:description,
-                 points:points   
+                 points:points,
+                 cloudid:cloudid   
                 }).into('points').returning('eventid')
     .catch(err=> {
         console.log('register_points error : ' + err)
@@ -1826,6 +1831,38 @@ app.post('/register_points',(req,res) =>{
         })
     })
     console.log('register_points success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null})
+})
+
+// -------------------------------------------------------------------------------------
+
+app.post('/register_status_credits',(req,res) =>{
+
+    const {userid,memid,description,statuscredits,cloudid} = req.body
+    console.log('register_status_credits req with body : userid - ' + userid  
+        + ' : memid - ' + memid 
+        + ' : description - ' + description 
+        + ' : credits - ' + statuscredits
+        + ' : cloudid - ' + cloudid) 
+    
+    db.insert( { userid :userid,
+                 memid:memid,
+                 description:description,
+                 statuscredits:statuscredits,  
+                 cloudid:cloudid
+                }).into('points').returning('eventid')
+    .catch(err=> {
+        console.log('register_status_credits error : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('register_status_credits success : ' + true)
     res.json({
         success:true,
         data:null,
