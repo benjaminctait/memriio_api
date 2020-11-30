@@ -1814,13 +1814,15 @@ app.post('/register_points',(req,res) =>{
         + ' : memid - ' + memid 
         + ' : description - ' + description 
         + ' : points - ' + points
-        + ' : cloud - ' + cloudid) 
+        + ' : cloud - ' + cloudid
+        ) 
     
     db.insert( { userid :userid,
                  memid:memid,
                  description:description,
                  points:points,
-                 cloudid:cloudid   
+                 cloudid:cloudid,
+                 statuscredits:0
                 }).into('points').returning('eventid')
     .catch(err=> {
         console.log('register_points error : ' + err)
@@ -1852,7 +1854,8 @@ app.post('/register_status_credits',(req,res) =>{
                  memid:memid,
                  description:description,
                  statuscredits:statuscredits,  
-                 cloudid:cloudid
+                 cloudid:cloudid,
+                 points:0
                 }).into('points').returning('eventid')
     .catch(err=> {
         console.log('register_status_credits error : ' + err)
