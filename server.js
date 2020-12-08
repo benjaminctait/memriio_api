@@ -1874,6 +1874,43 @@ app.post('/register_status_credits',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
+app.post('/get_points_data',(req,res) =>{
+   
+    const {userid,cloudid} = req.body
+       
+    db.select('*')
+        .from('points')
+        .where('userid',userid)
+        .andWhere('cloudid',cloudid)
+        .then(pointsData => {
+            if(Array.isArray(pointsData)){
+
+                console.log('get_points_data returned : recordcount ' + pointsData.length + ' records' )
+                res.json({
+                    success:true,
+                    data:pointsData,
+                    error:null
+                })
+              
+            }else{ 
+                console.log('get_points_data pointsData is not an array ');
+                res.json({
+                    success:false,
+                    data:null,
+                    error:'get_points_data returned empty result'
+                })
+            }
+        }).catch(err=> {
+        console.log('gget_points_data exception : ' + err)
+        res.json({
+            success:false,
+            data:null, 
+            error:err
+        })
+    })
+})
+
+// -------------------------------------------------------------------------------------
 
 app.post('/set_memory_tagged_people',(req,res) =>{
 
