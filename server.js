@@ -1912,6 +1912,44 @@ app.post('/get_points_data',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
+app.post('/get_statuslevels',(req,res) =>{
+   
+    const {cloudid} = req.body
+       
+    db.select('*')
+        .from('statuslevels')
+        .where('cloudid',cloudid)
+        .orderBy('reachvalue','asc')
+        .then(levels => {
+            if(Array.isArray(levels)){
+
+                console.log('get_statuslevels returned :  ' + levels )
+                res.json({
+                    success:true,
+                    data:levels,
+                    error:null
+                })
+              
+            }else{ 
+                console.log('get_statuslevels leves is not an array ');
+                res.json({
+                    success:false,
+                    data:null,
+                    error:'gget_statuslevels returned empty result'
+                })
+            }
+        }).catch(err=> {
+        console.log('get_statuslevels exception : ' + err)
+        res.json({
+            success:false,
+            data:null, 
+            error:err
+        })
+    })
+})
+
+// -------------------------------------------------------------------------------------
+
 app.post('/set_memory_tagged_people',(req,res) =>{
 
     const {memoryid,taggedPeople} = req.body
