@@ -454,6 +454,72 @@ app.post('/set_user_memberships',(req,res) =>{
 
 // -------------------------------------------------------------------------------------
 
+
+app.post('/special',(req,res) =>{
+
+    db.select('*').from('users').then(users=>{
+        if(Array.isArray(users)){
+            users.map(user => {
+                let r = Math.floor(Math.random() * 100) + Math.floor(Math.random() * 100) + Math.floor(Math.random() * 55)
+                let g = Math.floor(Math.random() * 100) + Math.floor(Math.random() * 100) + Math.floor(Math.random() * 55)
+                let b = Math.floor(Math.random() * 100) + Math.floor(Math.random() * 100) + Math.floor(Math.random() * 55)
+                let col = "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+                resetAvatar(user.userid,col)
+            })
+        }
+    
+})
+
+function componentToHex(c) {
+  
+    let hex = c.toString(16);  
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+
+// -------------------------------------------------------------------------------------
+
+resetAvatar = (userid,avatar) => {
+
+    
+    db('users')
+    .where({userid:userid})
+    .update({avatar:avatar})
+    .catch(err=> {
+        console.log('reset avatar error ', userid, err);
+    })
+    console.log('reset avatar success ', userid, avatar);     
+}
+
+// -------------------------------------------------------------------------------------
+
+app.post('/set_user_avatar',(req,res) =>{
+
+    const {userid,avatar} = req.body
+    
+    console.log('set_user_avatar req with body :' + userid + ' : ' + avatar) 
+    db('users')
+    .where({userid:userid})
+    .update({avatar:avatar})
+    .catch(err=> {
+        console.log('set_user_avatar db exception : ' + err)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+        })
+    })
+    console.log('sset_user_avatar db update success : ' + true)
+    res.json({
+        success:true,
+        data:null,
+        error:null
+    })             
+    
+})
+
+
+// -------------------------------------------------------------------------------------
+
 app.post('/setHeroImage_fileurl',(req,res) => {
     const {memid,fileurl} = req.body
     console.log('setHeroImage_fileurl : memoryid : ' +  memid + ' fileurl :' + fileurl)
