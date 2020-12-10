@@ -466,9 +466,11 @@ app.post('/special',(req,res) =>{
                 let col = "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
                 resetAvatar(user.userid,col)
             })
-        }
-    
+        }    
+    })
 })
+
+// -------------------------------------------------------------------------------------
 
 function componentToHex(c) {
   
