@@ -11,6 +11,8 @@ const { json } = require('body-parser')
 require('dotenv').config(); // Configure dotenv to load in the .env file
 const S3_BUCKET = process.env.S3_BUCKET
 
+// test
+
 const db = knex({
     client: 'pg',
     connection: {
