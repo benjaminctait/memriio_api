@@ -2114,7 +2114,7 @@ app.post('/set_memory_clouds',(req,res) =>{
                 error:null
                 })
             })        
-        .catch( error => {
+        .catch( err => {
             res.json({
                 success:false,
                 data:null,
