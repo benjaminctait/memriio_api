@@ -2053,22 +2053,16 @@ app.post('/set_memory_tagged_people',(req,res) =>{
     
     db.transaction(trx =>{
         trx('mempeople').where('memid',memoryid).del().returning('memid')                 
-        .then(response =>{
-            console.log('set_memory_tagged_people : delete mempeople for memory : ' + memoryid);
-            
-                taggedPeople.map(person =>{
-                    console.log('set_memory_tagged_people : insert into mempeople memid,userid : ' + memoryid + ', ' + person.userid);
+        .then(() =>{
+                taggedPeople.map(person =>{                    
                     addarray.push(
                         {
                             'memid' : memoryid,
                             'userid': person.userid
                         }
                     )
-                })
-                console.log('set_memory_tagged_people : addarray ' + JSON.stringify(addarray));
-                
-                return trx('mempeople').insert(addarray).returning('*')
-          
+                })                
+                return trx('mempeople').insert(addarray)          
         })
         .then(trx.commit)
         .then(()=>{
@@ -2108,7 +2102,7 @@ app.post('/set_memory_clouds',(req,res) =>{
                                 })) 
                 })
             .then(trx.commit)
-            .catch(trx.rollback).then(console.log('error - rolling back'))
+            .catch(trx.rollback)
         })
         .then(() => {
             console.log(`memory ${memoryid} clouds update : success`);
