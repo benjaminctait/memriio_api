@@ -2095,30 +2095,31 @@ app.post('/set_memory_clouds',(req,res) =>{
     const {memoryid,clouds} = req.body
     console.log('set_memory_clouds req with body :' + memoryid + ' : ' + clouds) 
     
-    db.transaction(trx =>{
-        db('memgroups').where('memid',memoryid).del()
-        .transacting(trx)
-        .then(response =>{
-            clouds.map(cloud =>{                
-                return db('memgroups').insert({memid:memoryid,groupid:cloud.id}).transacting(trx)
+        knex.transaction(trx => {
+
+            knex('memgroups').where('memid',memoryid).del()
+            .transacting(trx)
+            .then(ids => {
+                clouds.forEach( cloud => book.catalogue_id = ids[0]);
+                return knex('memgroups').insert({memid:memoryid,groupid:cloud.id}).transacting(trx)
             })
+            .then(trx.commit)
+            .catch(trx.rollback);
         })
-        .then(trx.commit)
-        .then(()=>{
+        .then(() => {
             res.json({
                 success:true,
                 data:null,
                 error:null
                 })
-            })
-        .catch(trx.rollback).then(err =>{
+            })        
+        .catch( error => {
             res.json({
                 success:false,
                 data:null,
                 error:err
              })
-    })
-    })
+        });
 })
 
 
