@@ -2100,14 +2100,18 @@ app.post('/set_memory_clouds',(req,res) =>{
 
             db('memgroups').where('memid',memoryid).del()
             .transacting(trx)
-            .then(ids => {
-                clouds.forEach( cloud => book.catalogue_id = ids[0]);
-                return db('memgroups').insert({memid:memoryid,groupid:cloud.id}).transacting(trx)
+            .then(() => {
+                clouds.forEach( cloud => {
+                    console.log(`inserting memid ${memoryid} cloudid ${cloud.id}` );
+                    return db('memgroups').insert({memid:memoryid,groupid:cloud.id}).transacting(trx)
+                });
+                
             })
             .then(trx.commit)
-            .catch(trx.rollback);
+            .catch(trx.rollback).then(console.log('error - rolling back'))
         })
         .then(() => {
+            console.log('success');
             res.json({
                 success:true,
                 data:null,
@@ -2115,6 +2119,7 @@ app.post('/set_memory_clouds',(req,res) =>{
                 })
             })        
         .catch( err => {
+            console.log(err);
             res.json({
                 success:false,
                 data:null,
