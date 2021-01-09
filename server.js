@@ -2053,9 +2053,9 @@ app.post('/set_memory_tagged_people',(req,res) =>{
     console.log('set_memory_tagged_people req with body :' + memoryid + ' : ' + JSON.stringify(taggedPeople)) 
     
     db.transaction(trx =>{
-        trx('mempeople').where('memid',memoryid).del().returning('memid')                 
+        db('mempeople').where('memid',memoryid).del().returning('memid')                 
         .then(response =>{
-            console.log('set_memory_tagged_people : delete mempeople for memory : ' + JSON.stringify(response.memid));
+            console.log('set_memory_tagged_people : delete mempeople for memory : ' + memoryid );
             
                 taggedPeople.map(person =>{
                     console.log('set_memory_tagged_people : insert into mempeople memid,userid : ' + memoryid + ', ' + person.userid);
@@ -2068,7 +2068,7 @@ app.post('/set_memory_tagged_people',(req,res) =>{
                 })
                 console.log('set_memory_tagged_people : addarray ' + JSON.stringify(addarray));
                 
-                return trx('mempeople').insert(addarray).returning('*')
+                return db('mempeople').insert(addarray).returning('*')
           
         })
         .then(trx.commit)
@@ -2099,7 +2099,7 @@ app.post('/set_memory_clouds',(req,res) =>{
     db.transaction(trx =>{
         trx('memgroups').where('memid',memoryid).del().returning('memid')                 
         .then(response =>{
-            console.log('set_memory_clouds : delete memgroups for memory : ' + response.memid);
+            console.log('set_memory_clouds : delete memgroups for memory : ' + memoryid);
             {
                 clouds.map(cloud =>{
                     console.log('set_memory_clouds : insert into memgroups memid,cloud.id : ' + memoryid + ', ' + cloud.id);
