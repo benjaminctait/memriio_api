@@ -1,13 +1,12 @@
-const express = require('express')
-
-const bparser = require('body-parser')
-const bcrypt = require('bcrypt-nodejs')
-const tinify =require('tinify')
-const cors = require('cors')
-const knex = require('knex')
-const aws = require('aws-sdk')
-const Jimp = require('jimp')
-const { json } = require('body-parser')
+const express   = require ( 'express'       )
+const bparser   = require ( 'body-parser'   )
+const bcrypt    = require ( 'bcrypt-nodejs' )
+const tinify    = require ( 'tinify'        )
+const cors      = require ( 'cors'          )
+const knex      = require ( 'knex'          )
+const aws       = require ( 'aws-sdk'       )
+const Jimp      = require ( 'jimp'          )
+const { json }  = require ( 'body-parser'   )
 require('dotenv').config(); // Configure dotenv to load in the .env file
 const S3_BUCKET = process.env.S3_BUCKET
 
