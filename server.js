@@ -2096,15 +2096,12 @@ app.post('/set_memory_clouds',(req,res) =>{
     console.log('set_memory_clouds req with body :' + memoryid + ' : ' + clouds) 
     
     db.transaction(trx =>{
-        trx('memgroups').where('memid',memoryid).del().returning('memid')                 
+        db('memgroups').where('memid',memoryid).del()
+        .transacting(trx)
         .then(response =>{
-            console.log('set_memory_clouds : delete memgroups for memory : ' + memoryid);
-            {
-                clouds.map(cloud =>{
-                    console.log('set_memory_clouds : insert into memgroups memid,cloud.id : ' + memoryid + ', ' + cloud.id);
-                    return trx.insert({memid:memoryid,groupid:cloud.id}).into('memgroups').returning('memid')
-                })
-            }
+            clouds.map(cloud =>{                
+                return db('memgroups').insert({memid:memoryid,groupid:cloud.id}).transacting(trx)
+            })
         })
         .then(trx.commit)
         .then(()=>{
@@ -2123,6 +2120,8 @@ app.post('/set_memory_clouds',(req,res) =>{
     })
     })
 })
+
+
 
 // -------------------------------------------------------------------------------------
 
