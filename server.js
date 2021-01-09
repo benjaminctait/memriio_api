@@ -2093,7 +2093,7 @@ app.post('/set_memory_tagged_people',(req,res) =>{
 app.post('/set_memory_clouds',(req,res) =>{
 
     const {memoryid,clouds} = req.body
-    console.log('set_memory_clouds req with body :' + memoryid + ' : ' + clouds) 
+    console.log('set_memory_clouds req with body :' + memoryid + ' : ' + JSON.stringify(clouds))
     
         
          db.transaction(trx => {
@@ -2101,7 +2101,8 @@ app.post('/set_memory_clouds',(req,res) =>{
             db('memgroups').where('memid',memoryid).del()
             .transacting(trx)
             .then(() => {
-               return Promise.all(clouds.forEach( cloud => {
+               
+               return Promise.all(clouds.map( cloud => {
                                     console.log(`inserting memid ${memoryid} cloudid ${cloud.id}` );
                                     return db('memgroups').insert({memid:memoryid,groupid:cloud.id}).transacting(trx)
                                 })) 
@@ -2110,7 +2111,7 @@ app.post('/set_memory_clouds',(req,res) =>{
             .catch(trx.rollback).then(console.log('error - rolling back'))
         })
         .then(() => {
-            console.log('success');
+            console.log(`memory ${memoryid} clouds update : success`);
             res.json({
                 success:true,
                 data:null,
