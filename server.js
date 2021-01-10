@@ -287,23 +287,24 @@ app.post('/associateFile',(req,res) => {
             displayurl
         })        
         .returning('fileid')
+        .then(trx.commit)
+        .then(fileid =>{
+            if(Array.isArray(fileid)){
+                res.json({
+                    created:true,
+                    fileid:fileid[0]
+                })
+            }else{
+                res.json({
+                    created:false,
+                    id:0
+                }) 
+            }
+        })
+        .catch(trx.rollback)    
     })
-    .then(trx.commit)
-    .then(fileid =>{
-        if(Array.isArray(fileid)){
-            res.json({
-                created:true,
-                fileid:fileid[0]
-            })
-        }else{
-            res.json({
-                created:false,
-                id:0
-            }) 
-        }
-    })
-    .catch(trx.rollback)
-})
+    
+});
 
     
 
