@@ -306,7 +306,34 @@ app.post('/associateFile',(req,res) => {
     
 });
 
+// -------------------------------------------------------------------------------------------
     
+app.post('/set_memory_herofile',(req,res) => {
+    const{memid,fileurl} = req.body;
+    
+    console.log(`set_memory_herofile : memid: ${memid } fileurl ${fileurl}`);
+
+    db.transaction(trx =>{
+        
+        trx     ('memfiles')
+        .where  ('memid',memid)
+        .update ({ishero: false})
+        .then   (()=>{
+                return  trx('memfiles')
+                        .where('memid',memid)
+                        .andWhere('fileurl',fileurl)
+                        .update({ishero: true})                    
+                })
+                .then(trx.commit)
+                .then(() =>{
+                        res.json({
+                            success:true,
+                        })            
+                })
+                .catch(trx.rollback)   
+    })
+    
+});
 
 
 // Associate key words with a memory ----------------------------------------------------------------
