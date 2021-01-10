@@ -219,11 +219,12 @@ app.post ('/getObject_signedurl',(req,res) =>{
 app.post('/creatememory',(req,res) => {
     const {userid,title,story,description,location} = req.body
     console.log('creatememory : title ' + title + ' userid ' + userid );
-    
+    let cdate = new Date()
     db('memories')
         .returning('memid')
         .insert({
-            createdon:new Date(),
+            createdon:cdate,
+            updatedon:cdate,
             userid:userid,
             title:title,
             description:description,
@@ -248,6 +249,19 @@ app.post('/creatememory',(req,res) => {
 })
 
 // Add file to memory ---------
+app.post('/update_memory_modified',(req,res) => {
+    const {memid} = req.body
+    cdate = new Date()
+    db('memories')
+    .where({memid:memid})
+    .update({modifiedon:cdate})
+    .catch(err=> {
+        console.log('reset modified date : FAIL ', memid, err);
+    })
+    console.log('reset modified date : SUCCESS ', memid, cdate);     
+})
+
+// -------------------------------------------------------------------------------------------
 
 app.post('/associateFile',(req,res) => {
     const{memid,fileurl,fileext,thumburl,thumbext,ishero, displayurl=''} = req.body;
