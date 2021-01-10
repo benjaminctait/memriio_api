@@ -1304,7 +1304,7 @@ app.post('/get_clouds',(req,res) =>{
 app.post('/get_clouds_userid',(req,res) =>{
 
     const {userID} = req.body
-    console.log('get_clouds_userid : received query for user ' + userID);
+    console.log('get_clouds_userid : for user ' + userID);
     
     
     db.select('*')
@@ -1313,7 +1313,7 @@ app.post('/get_clouds_userid',(req,res) =>{
         this.select('groupid').from('memberships').where({userid:userID})})
     .orderBy('clouds.createdon','desc')
     .then(clouds=>{
-        console.log('get_clouds_userid : db returned clouds : ' + clouds);
+        console.log(`get_clouds_userid : ${userID } returned clouds : ${clouds.map(cloud =>{return clouid.id+' '+cloud.name})}`);
         if(Array.isArray(clouds)){
             res.json({
                 success:true,
@@ -2063,7 +2063,7 @@ app.post('/set_memory_tagged_people',(req,res) =>{
             .catch(trx.rollback)
         })
         .then(() => {
-            console.log(`memory people update memid : ${memoryid} add clouds ${clouds.map(cloud=>{return cloud.id} )} : success`);
+            console.log(`memory people update memid : ${memoryid} add clouds ${taggedPeople.map(person=>{return person.userid} )} : success`);
             res.json({
                 success:true,
                 data:null,
