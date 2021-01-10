@@ -31,3 +31,37 @@ app.post('/set_memory_clouds',(req,res) =>{
     })
     })
 })
+
+addarray = []
+    console.log('set_memory_tagged_people req with body :' + memoryid + ' : ' + JSON.stringify(taggedPeople,null,2)) 
+    
+    db.transaction(trx =>{
+        trx('mempeople').where('memid',memoryid).del().returning('memid')                 
+        .then(() =>{
+                taggedPeople.map(person =>{                    
+                    addarray.push(
+                        {
+                            'memid' : memoryid,
+                            'userid': person.userid
+                        }
+                    )
+                })                
+                return trx('mempeople').insert(addarray)          
+        })
+        .then(trx.commit)
+        .then(()=>{
+            console.log(`memory people update memid : ${memoryid} add people ${taggedPeople.map(person=>{return person.userid} )} : success`);
+            res.json({
+                success:true,
+                data:null,
+                error:null
+                })
+            })
+        .catch(trx.rollback).then(err =>{
+            res.json({
+                success:false,
+                data:null,
+                error:err
+                })
+    })
+})

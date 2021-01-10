@@ -2047,39 +2047,39 @@ app.post('/get_statuslevels',(req,res) =>{
 
 app.post('/set_memory_tagged_people',(req,res) =>{
 
-    const {memoryid,taggedPeople} = req.body
-    addarray = []
-    console.log('set_memory_tagged_people req with body :' + memoryid + ' : ' + JSON.stringify(taggedPeople)) 
-    
-    db.transaction(trx =>{
-        trx('mempeople').where('memid',memoryid).del().returning('memid')                 
-        .then(() =>{
-                taggedPeople.map(person =>{                    
-                    addarray.push(
-                        {
-                            'memid' : memoryid,
-                            'userid': person.userid
-                        }
-                    )
-                })                
-                return trx('mempeople').insert(addarray)          
+    const {memoryid,taggedPeople} = req.body    
+    console.log(`set_memory_tagged_people memid : ${memoryid} new people ${taggedPeople.map(person=>{return person.userid} )}`)    
+        
+         db.transaction(trx => {
+
+            db('mempeople').where('memid',memoryid).del()
+            .transacting(trx)
+            .then(() => {
+               return Promise.all(taggedPeople.map( person => {                                    
+                                    return trx('mempeople').insert({memid:memoryid,userid:person.userid})
+                                })) 
+                })
+            .then(trx.commit)
+            .catch(trx.rollback)
         })
-        .then(trx.commit)
-        .then(()=>{
+        .then(() => {
+            console.log(`memory people update memid : ${memoryid} add clouds ${clouds.map(cloud=>{return cloud.id} )} : success`);
             res.json({
                 success:true,
                 data:null,
                 error:null
                 })
-            })
-        .catch(trx.rollback).then(err =>{
+            })        
+        .catch( err => {
+            console.log(err);
             res.json({
                 success:false,
                 data:null,
                 error:err
-                })
-    })
-})
+             })
+        });
+
+    
 })
 
 // -------------------------------------------------------------------------------------
@@ -2105,7 +2105,7 @@ app.post('/set_memory_clouds',(req,res) =>{
             .catch(trx.rollback)
         })
         .then(() => {
-            console.log(`memory ${memoryid} clouds update : success`);
+            console.log(`memory clouds update memid : ${memoryid} add clouds ${clouds.map(cloud=>{return cloud.id} )} : success`);
             res.json({
                 success:true,
                 data:null,
