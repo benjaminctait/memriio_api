@@ -1,67 +1,30 @@
-app.post('/set_memory_clouds',(req,res) =>{
-
-    const {memoryid,clouds} = req.body
-    console.log('set_memory_clouds req with body :' + memoryid + ' : ' + clouds) 
+app.post('/associateFile',(req,res) => {
+    const{memid,fileurl,fileext,thumburl,thumbext,ishero, displayurl=''} = req.body;
     
-    db.transaction(trx =>{
-        trx('memgroups').where('memid',memoryid).del().returning('memid')                 
-        .then(response =>{
-            console.log('set_memory_clouds : delete memgroups for memory : ' + memoryid);
-            {
-                clouds.map(cloud =>{
-                    console.log('set_memory_clouds : insert into memgroups memid,cloud.id : ' + memoryid + ', ' + cloud.id);
-                    return trx.insert({memid:memoryid,groupid:cloud.id}).into('memgroups').returning('memid')
-                })
-            }
+    console.log(`associateFile : memid: ${memid } fileurl ${fileurl}`);
+    db('memfiles').returning('*')
+        .insert({
+            memid:memid,
+            fileurl:fileurl,
+            fileext:fileext,
+            thumburl:thumburl,
+            thumbext:thumbext,
+            ishero:ishero,
+            displayurl
         })
-        .then(trx.commit)
-        .then(()=>{
-            res.json({
+        .then(result =>{
+            console.log('associateFile : ',JSON.stringify(result.null,2));
+            this.
+            res.json( {
                 success:true,
-                data:null,
+                data:result,
                 error:null
-                })
+             }) 
+        }).catch(err =>{
+            res.json( {
+                success:true,
+                data:err,
+                error:null
             })
-        .catch(trx.rollback).then(err =>{
-            res.json({
-                success:false,
-                data:null,
-                error:err
-             })
-    })
-    })
-})
-
-addarray = []
-    console.log('set_memory_tagged_people req with body :' + memoryid + ' : ' + JSON.stringify(taggedPeople,null,2)) 
-    
-    db.transaction(trx =>{
-        trx('mempeople').where('memid',memoryid).del().returning('memid')                 
-        .then(() =>{
-                taggedPeople.map(person =>{                    
-                    addarray.push(
-                        {
-                            'memid' : memoryid,
-                            'userid': person.userid
-                        }
-                    )
-                })                
-                return trx('mempeople').insert(addarray)          
         })
-        .then(trx.commit)
-        .then(()=>{
-            console.log(`memory people update memid : ${memoryid} add people ${taggedPeople.map(person=>{return person.userid} )} : success`);
-            res.json({
-                success:true,
-                data:null,
-                error:null
-                })
-            })
-        .catch(trx.rollback).then(err =>{
-            res.json({
-                success:false,
-                data:null,
-                error:err
-                })
-    })
-})
+    })  

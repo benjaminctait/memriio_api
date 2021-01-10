@@ -266,8 +266,17 @@ app.post('/update_memory_modified',(req,res) => {
 app.post('/associateFile',(req,res) => {
     const{memid,fileurl,fileext,thumburl,thumbext,ishero, displayurl=''} = req.body;
     
+    console.log(`associateFile : memid: ${memid } fileurl ${fileurl}`);
 
-    db('memfiles').returning('*')
+    db.transaction(trx =>{
+        if(ishero){
+            trx('memfiles')
+            .where('memid',memid)
+            .update({ishero: false})
+            .then()
+            .catch()
+        }
+        trx('memfiles')
         .insert({
             memid:memid,
             fileurl:fileurl,
@@ -276,21 +285,28 @@ app.post('/associateFile',(req,res) => {
             thumbext:thumbext,
             ishero:ishero,
             displayurl
-        })
-        .then(result =>{
-            res.json( {
-                success:true,
-                data:result,
-                error:null
-             }) 
-        }).catch(err =>{
-            res.json( {
-                success:true,
-                data:err,
-                error:null
+        })        
+        .returning('fileid')
+    })
+    .then(trx.commit)
+    .then(fileid =>{
+        if(Array.isArray(fileid)){
+            res.json({
+                created:true,
+                fileid:fileid[0]
             })
-        })
-    })  
+        }else{
+            res.json({
+                created:false,
+                id:0
+            }) 
+        }
+    })
+    .catch(trx.rollback)
+})
+
+    
+
 
 // Associate key words with a memory ----------------------------------------------------------------
 
@@ -1327,7 +1343,7 @@ app.post('/get_clouds_userid',(req,res) =>{
         this.select('groupid').from('memberships').where({userid:userID})})
     .orderBy('clouds.createdon','desc')
     .then(clouds=>{
-        console.log(`get_clouds_userid : ${userID } returned clouds : ${clouds.map(cloud =>{return clouid.id+' '+cloud.name})}`);
+        console.log(`get_clouds_userid : ${userID } returned clouds : ${clouds.map(cloud =>{return cloud.id+' '+cloud.name})}`);
         if(Array.isArray(clouds)){
             res.json({
                 success:true,
@@ -2077,7 +2093,7 @@ app.post('/set_memory_tagged_people',(req,res) =>{
             .catch(trx.rollback)
         })
         .then(() => {
-            console.log(`memory people update memid : ${memoryid} add clouds ${taggedPeople.map(person=>{return person.userid} )} : success`);
+            console.log(`memory people update memid : ${memoryid} add people ${taggedPeople.map(person=>{return person.userid} )} : success`);
             res.json({
                 success:true,
                 data:null,
