@@ -1260,6 +1260,7 @@ app.post('/set_searchwords_memid',(req,res)=>{
         })
         .then(trx.commit)
         .catch(trx.rollback).then(err =>{
+            let e = 1
             throw err
         })
     })
