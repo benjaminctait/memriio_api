@@ -224,7 +224,7 @@ app.post('/creatememory',(req,res) => {
         .returning('memid')
         .insert({
             createdon:cdate,
-            updatedon:cdate,
+            modifiedon:cdate,
             userid:userid,
             title:title,
             description:description,
