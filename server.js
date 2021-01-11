@@ -1243,46 +1243,43 @@ app.post('/get_memories_cloudids_keywords',(req,res) =>{
 
 app.post('/set_searchwords_memid',(req,res)=>{
     const {memid,searchwords } = req.body
-    addarray = []
-    console.log('set_searchwords_memid for memid ' + memid + ' searchWord count : ' + searchwords.length);
     
-    db.transaction(trx =>{
-        trx('memwords').where({memid:memid}).del()
-        .then(() =>{
-           searchwords.map(worditem =>{
-            console.log('set_searchwords_memid : worditem' + JSON.stringify(worditem));
-               
-                addarray.push(
-                {
-                   memid:memid,
-                   keyword:worditem.keyword,
-                   strength:worditem.strength 
-                })
-               
-           })
-           console.log('set_searchwords_memid : addarray' + JSON.stringify(addarray));
+    console.log('set_searchwords_memid for memid ' + memid + ' searchWord count : ' + searchwords.length);
+
+    db.transaction(trx => {
+
+        db('memwords').where('memid',memid).del()
+        .transacting(trx)
+        .then(() => {
            
-           return trx('memwords').insert(addarray)
+           return Promise.all(searchwords.map( worditem => {                                
+                                return trx('memwords').insert({ memid:memid,
+                                                                keyword:worditem.keyword,
+                                                                strength:worditem.strength })
+                                })) 
         })
         .then(trx.commit)
-        .then(response =>{
-            console.log('set_searchwords_memid : commit = ' + true);
-            res.json({
-                success:true,
-                data:null,
-                error:null
-                })
-            })
         .catch(trx.rollback).then(err =>{
-            console.log('set_searchwords_memid : commit = ' + false);
-            console.log('set_searchwords_memid : error = ' + JSON.stringify(err));
-            res.json({
-                success:false,
-                data:null,
-                error:JSON.stringify(err)
-                })
+            throw err
+        })
     })
-})
+    .then(() => {
+        console.log(`set_searchwords_memid : ${memid} add words ${searchwords.map(worditem=>{return worditem.keyword} )} : success`);
+        res.json({
+            success:true,
+            data:null,
+            error:null
+            })
+        })        
+    .catch( err => {
+        console.log('set_searchwords_memid ERROR ',err);
+        res.json({
+            success:false,
+            data:null,
+            error:err
+         })
+    });
+
 })
 // --------------------------------------------------------------------------------
 
