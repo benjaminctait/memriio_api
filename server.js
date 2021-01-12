@@ -356,23 +356,32 @@ app.post('/associateKeyword',(req,res) => {
 
 app.post('/add_memory_like',(req,res) => {
     const {memid,userid} = req.body
-    
-    db.transaction(trx =>{
+    console.log(`add_memory_like : memid: ${memid } userid ${userid}`);
+
+    db.transaction( async(trx) => {
         
-        trx        ( 'praise')
-        .where     ( 'memid',memid)
-        .andWhere  ( 'userid',userid)
-        .returning ( 'praiseid' )
-        .then      ((praiseids)=>{
-                if (praiseids.length>0) return trx('memfiles').insert({memid:memid,userid:userid}) 
-                })
-                .then(trx.commit)
-                .then(() =>{
-                        res.json({
-                            success:true,
-                        })            
-                })
-                .catch(trx.rollback)   
+        let ids = await trx.select('praiseid').from('praise').where('memid',memid).andWhere('userid',userid).andWhere('type',0)
+        console.log('add_memory_like returned ids : ', ids);
+
+        if (ids.length>0) {
+           trx('memfiles').insert({memid:memid,userid:userid}).returning('prasieid')
+           .catch(err =>{
+            console.log('add_memory_like FAILED : ',err)
+            res.json({
+                success:false,
+                data:null,
+                err:err
+            })   
+           })  
+           .then((recordid) =>{
+                    console.log('add_memory_like returned : ',recordid)
+                    res.json({
+                        success:true,
+                        data:recordid[0]
+                    })            
+           })
+                 
+        }
     })
 })
 
