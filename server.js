@@ -361,10 +361,18 @@ app.post('/add_memory_like',(req,res) => {
     db.transaction( async(trx) => {
         
         let ids = await trx.select('praiseid').from('praise').where('memid',memid).andWhere('userid',userid).andWhere('type',0)
-        console.log('add_memory_like returned ids : ', ids);
+        console.log('add_memory_like returned ids : ', ids,ids.length);
 
-        if (ids.length>0) {
+        if (ids.length === 0) {
+           console.log('add_memory_like no existing likes found')
            trx('memfiles').insert({memid:memid,userid:userid}).returning('prasieid')
+           .then((recordid) =>{
+            console.log('add_memory_like returned : ',recordid)
+            res.json({
+                success:true,
+                data:recordid[0]
+                })            
+            })
            .catch(err =>{
             console.log('add_memory_like FAILED : ',err)
             res.json({
@@ -373,13 +381,7 @@ app.post('/add_memory_like',(req,res) => {
                 err:err
             })   
            })  
-           .then((recordid) =>{
-                    console.log('add_memory_like returned : ',recordid)
-                    res.json({
-                        success:true,
-                        data:recordid[0]
-                    })            
-           })
+           
                  
         }
     })
