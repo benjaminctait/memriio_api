@@ -335,8 +335,7 @@ app.post('/set_memory_herofile',(req,res) => {
     
 });
 
-
-// Associate key words with a memory ----------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
 
 app.post('/associateKeyword',(req,res) => {
     const {memid,keyword} = req.body
@@ -351,6 +350,30 @@ app.post('/associateKeyword',(req,res) => {
             res.json(result[0]);  // returns the memory id if successfull
         })
         .catch(err=> res.status(400).json('unable to associate'))
+})
+
+// ------------------------------------------------------------------------------------------
+
+app.post('/add_memory_like',(req,res) => {
+    const {memid,userid} = req.body
+    
+    db.transaction(trx =>{
+        
+        trx        ( 'praise')
+        .where     ( 'memid',memid)
+        .andWhere  ( 'userid',userid)
+        .returning ( 'praiseid' )
+        .then      ((praiseids)=>{
+                if (praiseids.length>0) return trx('memfiles').insert({memid:memid,userid:userid}) 
+                })
+                .then(trx.commit)
+                .then(() =>{
+                        res.json({
+                            success:true,
+                        })            
+                })
+                .catch(trx.rollback)   
+    })
 })
 
 // -------------------------------------------------------------------------------------------
@@ -1259,13 +1282,10 @@ app.post('/set_searchwords_memid',(req,res)=>{
                                 })) 
         })
         .then(trx.commit)
-        .catch(trx.rollback).then(err =>{
-            let e = 1
-            throw err
-        })
+        .catch(trx.rollback)
     })
     .then(() => {
-        console.log(`set_searchwords_memid : ${memid} add words ${searchwords.map(worditem=>{return worditem.keyword} )} : success`);
+        console.log(`set_searchwords_memid : ${memid} add words[ ${searchwords.map(worditem=>{return worditem.keyword} )} ] : success`);
         res.json({
             success:true,
             data:null,
