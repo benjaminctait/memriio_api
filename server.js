@@ -365,7 +365,7 @@ app.post('/add_memory_like',(req,res) => {
 
         if (ids.length === 0) {
            console.log('add_memory_like no existing likes found')
-           db('memfiles').insert({memid:memid,userid:userid}).returning('prasieid')
+           db('praise').insert({memid:memid,userid:userid}).returning('prasieid')
            .then((recordid) =>{
             console.log('add_memory_like returned : ',recordid)
             res.json({
