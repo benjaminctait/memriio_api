@@ -1388,6 +1388,42 @@ app.post('/get_clouds',(req,res) =>{
 
 //----------------------------------------------------------------------------
 
+app.post('/get_latest_memid',(req,res) =>{
+
+    const {cloudid} = req.body
+    console.log('get_latest_memid : for cloud ' + cloudid);
+    
+    db('memories')
+    .max('memid')
+    .whereIn('memid',function(){
+        this.select('memid').from('memgroups').where({groupid:cloudid})})
+    
+    .then(max =>{
+        if( max.length > 0 ){
+            console.log(`get_latest_memid : ${cloudid } returned : ${max[0]}`);
+            res.json({
+                success:true,
+                data:max[0],
+                error:null
+            })
+        }else{
+            res.json({
+                success:false,
+                data:null,
+                error:`get_latest_memid for cloud ${cloudid}  returned empty`
+            })
+        }
+    }).catch(err=> {
+        console.log(`get_latest_memid for cloud ${cloudid} FAILED : ${err}`)
+        res.json({
+            success:false,
+            data:null,
+            error:`get_latest_memid for cloud ${cloudid} FAILED : ${err}`
+        })
+    })
+})
+//----------------------------------------------------------------------------
+
 app.post('/get_clouds_userid',(req,res) =>{
 
     const {userID} = req.body
