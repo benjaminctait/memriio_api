@@ -1398,12 +1398,12 @@ app.post('/get_latest_memid',(req,res) =>{
     .whereIn('memid',function(){
         this.select('memid').from('memgroups').where({groupid:cloudid})})
     
-    .then(max =>{
-        if( max.length > 0 ){
-            console.log(`get_latest_memid : ${cloudid } returned : ${max[0]}`);
+    .then(result =>{
+        if( result.length > 0 ){
+            console.log(`get_latest_memid : ${cloudid } returned : ${result[0].max}`);
             res.json({
                 success:true,
-                data:max[0],
+                data:result[0].max,
                 error:null
             })
         }else{
