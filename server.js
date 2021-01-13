@@ -781,6 +781,89 @@ app.post('/get_cloud_memberships',(req,res) =>{
 
 //------------------------------------------------------------------------------------------------------
 
+
+app.post('/get_memories_above_index',(req,res) =>{
+
+    const {cloudid,memid } = req.body
+    console.log(`get_memories_above_index for cloud ${cloudid} above index ${memid}`);
+    
+    db.select('*')                
+    .from('memories')
+    .where('memid','>',memid)
+    .andWhere(function(){
+        this.whereIn('memories.memid',function(){
+            this.select('memgroups.memid').from('memgroups').where('memgroups.groupid',cloudid)})
+    .orderBy('memories.createdon','asc')
+    .then(memories=>{
+        if(memories.length > 0 ){
+            console.log(`get_memories_above_index for cloud ${cloudid} returned ${
+                memories.map((mem,index) =>{console.log(`memory : ${index} memid ${mem.memid} Title ${mem.title} `)})}`);
+            res.json({
+                success:true,
+                data:memories,
+                error:null
+                })
+        }else{
+            console.log(`get_memories_above_index for cloud ${cloudid} returned no results`)
+            res.json({
+                success:false,
+                data:null,
+                error:'No memories found'
+                })
+        }
+    })
+    .catch(err=> {
+        console.log(`get_memories_above_index for cloud ${cloudid} FAILED : ${err}`)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+            })  
+    })
+})
+
+//------------------------------------------------------------------------------------------------------
+
+app.post('/get_memory_likes',(req,res) =>{
+
+    const {cloudid,memid } = req.body
+    console.log(`get_memory_likes for memory ${memid} in cloud ${cloudid}`);
+    
+    db.select('*')                
+    .from('praise')
+    .where('memid',memid)
+    .andWhere('cloudid',cloudid)
+    .andWhere('type',0)
+    .then(likes=>{
+        if(likes.length > 0 ){
+            console.log(`get_memory_likes for memid ${memid} returned ${
+                memories.map(like =>{console.log(`userid : ${like.userid}`)})}`);
+            res.json({
+                success:true,
+                data:memories,
+                error:null
+                })
+        }else{
+            console.log(`get_memory_likes for memid ${memid} returned no results`)
+            res.json({
+                success:false,
+                data:null,
+                error:'No memories found'
+                })
+        }
+    })
+    .catch(err=> {
+        console.log(`get_memory_likes for memid ${memid} FAILED : ${err}`)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+            })  
+    })
+})
+
+//------------------------------------------------------------------------------------------------------
+
 app.post('/get_memories_userid_keywords_cloudids',(req,res) =>{
 
     const {words,userid,cloudids} = req.body
