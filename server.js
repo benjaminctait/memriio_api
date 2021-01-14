@@ -834,8 +834,9 @@ app.post('/get_memory_likes',(req,res) =>{
     .andWhere('cloudid',cloudid)
     .andWhere('type',0)
     .then(likes=>{
+            
             console.log(`get_memory_likes for memid ${memid} returned ${
-                memories.map(like =>{console.log(`userid : ${like.userid}`)})}`);
+                likes.map(like =>{return `userid : ${like.userid}`})}`);
             res.json({
                 success:true,
                 data:likes,
