@@ -792,7 +792,7 @@ app.post('/get_memories_above_index',(req,res) =>{
     .where('memid','>',memid)
     .andWhere(function(){
         this.whereIn('memories.memid',function(){
-            this.select('memgroups.memid').from('memgroups').where('memgroups.groupid',cloudid)})
+            this.select('memgroups.memid').from('memgroups').where('memgroups.groupid',cloudid)})})
     .orderBy('memories.createdon','asc')
     .then(memories=>{
         if(memories.length > 0 ){
@@ -823,7 +823,6 @@ app.post('/get_memories_above_index',(req,res) =>{
 })
 
 //------------------------------------------------------------------------------------------------------
-
 app.post('/get_memory_likes',(req,res) =>{
 
     const {cloudid,memid } = req.body
@@ -861,6 +860,7 @@ app.post('/get_memory_likes',(req,res) =>{
             })  
     })
 })
+
 
 //------------------------------------------------------------------------------------------------------
 
