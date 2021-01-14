@@ -796,8 +796,8 @@ app.post('/get_memories_above_index',(req,res) =>{
     .orderBy('memories.createdon','asc')
     .then(memories=>{
         if(memories.length > 0 ){
-            console.log(`get_memories_above_index for cloud ${cloudid} returned ${
-                memories.map((mem,index) =>{console.log(`memory : ${index} memid ${mem.memid} Title ${mem.title} `)})}`);
+            let returnmems = memories.map((mem,index) =>{console.log(`memory : ${index} memid ${mem.memid} Title ${mem.title} `)})
+            console.log(`get_memories_above_index for cloud ${cloudid} returned ${returnmems}`);
             res.json({
                 success:true,
                 data:memories,
@@ -834,22 +834,13 @@ app.post('/get_memory_likes',(req,res) =>{
     .andWhere('cloudid',cloudid)
     .andWhere('type',0)
     .then(likes=>{
-        if(likes.length > 0 ){
             console.log(`get_memory_likes for memid ${memid} returned ${
                 memories.map(like =>{console.log(`userid : ${like.userid}`)})}`);
             res.json({
                 success:true,
-                data:memories,
+                data:likes,
                 error:null
                 })
-        }else{
-            console.log(`get_memory_likes for memid ${memid} returned no results`)
-            res.json({
-                success:false,
-                data:null,
-                error:'No memories found'
-                })
-        }
     })
     .catch(err=> {
         console.log(`get_memory_likes for memid ${memid} FAILED : ${err}`)
