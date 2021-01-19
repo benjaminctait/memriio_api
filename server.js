@@ -707,11 +707,11 @@ app.post('/associateGroup',(req,res) => {
 app.post('/getUser_userid',(req,res) =>{
 
     const { userid } = req.body;
-    console.log('getUser : ' + userid);
+    console.log('getUser_userid : ' + userid);
         
     db.select('*').from('users').where({userid:userid}).then(users=>{
         if(Array.isArray(users)){
-            console.log('get_User returned : userid: ' + users[0].userid + ' ' + users[0].firstname + ' ' + users[0].lastname )
+            console.log('getUser_userid returned : userid: ' + users[0].userid + ' ' + users[0].firstname + ' ' + users[0].lastname )
             
             res.json({
                 success:true,
@@ -720,7 +720,7 @@ app.post('/getUser_userid',(req,res) =>{
                 })
             
         }else{
-            console.log('get_User returned : userid: ' + userid + ' not found ! ' )
+            console.log('getUser_userid returned : userid: ' + userid + ' not found ! ' )
             res.json({
                 success:false,
                 data:null,
@@ -1010,25 +1010,19 @@ app.post('/get_memories_keywords_clouds',(req,res) =>{
 
 // search user ----------------------------------------------------------------
 
-app.post('/get_memories_userid_allclouds',(req,res) =>{
+app.post('/get_memories_userid',(req,res) =>{
 
     const {userid} = req.body
-    console.log('get_memories_userid_allclouds : userid : ' + userid );
+    console.log('get_memories_userid : userid : ' + userid );
 
     db.select('*')
     .from('memories')
-    .join('memfiles', function() {this.on('memfiles.memid', '=', 'memories.memid').onIn('memfiles.ishero',[true])})
     .where({userid:userid})
-    .orWhereIn('memories.memid',function(){this.select('memid').from('memgroups')
-        .whereIn('memgroups.groupid',function(){this.select('groupid').from('memberships')
-            .where({userid:userid})})})
-
     .orderBy('memories.createdon','desc')
-
     .then(memories=>{
         
         if(Array.isArray(memories)){
-            console.log('get_memories_userid_allclouds : success = ' + true);
+            console.log('get_memories_userid : success = ' + true);
             memories.map((mem,index) =>{console.log('returned memory : ' + index + ' memid' + mem.memid + ' Title ' + mem.title )})
             res.json({
                 success:true,
@@ -2194,7 +2188,7 @@ app.post('/get_points_data',(req,res) =>{
                 })
             }
         }).catch(err=> {
-        console.log('gget_points_data exception : ' + err)
+        console.log('get_points_data exception : ' + err)
         res.json({
             success:false,
             data:null, 
