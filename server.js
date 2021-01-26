@@ -380,9 +380,13 @@ app.post('/add_memory_like',(req,res) => {
                 data:null,
                 err:err
             })   
-           })  
-           
-                 
+           })      
+        }else{
+            res.json({
+                success:false,
+                data:ids,
+                error:`memry is already liked by user ${userid}`
+                })    
         }
     })
 })
