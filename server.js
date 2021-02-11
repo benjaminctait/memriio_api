@@ -21,7 +21,7 @@ const db = knex({
     pool: {
         max: 50,
         min:2,
-        propagateCreateError: false
+        propagateCreateErrors: false
     }
 });
 
