@@ -18,11 +18,7 @@ const db = knex({
       connectionString : process.env.DATABASE_URL,
       ssl : true
     },
-    pool: {
-        max: 50,
-        min:2,
-        propagateCreateErrors: false
-    }
+    
 });
 
 aws.config.update({
