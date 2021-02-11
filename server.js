@@ -17,6 +17,11 @@ const db = knex({
     connection: {
       connectionString : process.env.DATABASE_URL,
       ssl : true
+    },
+    pool: {
+        max: 50,
+        min:2,
+        propagateCreateError: false
     }
 });
 
