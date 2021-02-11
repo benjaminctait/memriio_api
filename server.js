@@ -861,6 +861,36 @@ app.post('/get_memory_likes',(req,res) =>{
 
 
 //------------------------------------------------------------------------------------------------------
+app.post('/get_memory',(req,res) =>{
+
+    const { memid } = req.body
+    console.log(`get_memory ${memid}`);
+    
+    db.select('*')                
+    .from('memories')
+    .where('memid',memid)    
+    .then( memory =>{
+            
+            console.log(`get_memory returned memid ${memory.memid} ${ memory.title }`)
+            res.json({
+                success:true,
+                data:memory,
+                error:null
+                })
+    })
+    .catch(err=> {
+        console.log(`get_memory for memid ${memid} FAILED : ${err}`)
+        res.json({
+            success:false,
+            data:null,
+            error:err
+            })  
+    })
+})
+
+
+
+//------------------------------------------------------------------------------------------------------
 
 app.post('/get_memories_userid_keywords_cloudids',(req,res) =>{
 
