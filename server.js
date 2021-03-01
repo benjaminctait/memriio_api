@@ -251,10 +251,14 @@ app.post('/creatememory', (req, res) => {
         )
 })
 
-// Add file to memory ---------
+// -------------------------------------------------------------------------------------------
+
 app.post('/update_memory_modified', (req, res) => {
+
     const { memid } = req.body
     cdate = new Date()
+    console.log(`update_memory_modified : memid: ${memid} data ${cdate}`);
+
     db('memories')
         .where({ memid: memid })
         .update({ modifiedon: cdate })
